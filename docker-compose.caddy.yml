@@ -1,0 +1,32 @@
+# Standalone mode — adds Caddy (automatic TLS, reverse-proxies the SPA
+# container and the API).
+#
+# DNS: point obs.<DOMAIN> to this server; ports 80/443 must be public.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy/module-obs.caddy:/etc/caddy/module-obs.caddy:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      obs-web:
+        condition: service_started
+      obs-api:
+        condition: service_started
+
+volumes:
+  caddy_data:
+  caddy_config:

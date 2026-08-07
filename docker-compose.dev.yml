@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres-obs
+    ports:
+      - "10702:5432"
+    environment:
+      POSTGRES_USER: rawtoh
+      POSTGRES_PASSWORD: rawtoh
+      POSTGRES_DB: obs
+    volumes:
+      - postgres-obs-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres-obs-data:

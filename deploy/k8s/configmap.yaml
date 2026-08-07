@@ -1,0 +1,18 @@
+# Non-sensitive configuration. $DOMAIN is substituted at apply time.
+# Rawtoh platform URLs point at the public hostnames (OIDC issuer must
+# match the `iss` claim) except RAWTOH_WS_URL, which uses in-cluster DNS.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: obs-config
+  namespace: rawtoh
+data:
+  PUBLIC_DOMAIN: obs.$DOMAIN
+  APP_URL: https://obs.$DOMAIN
+  POSTGRES_USER: rawtoh
+  POSTGRES_DB: obs
+  # Rawtoh platform
+  RAWTOH_ISSUER: https://app.$DOMAIN/api/auth
+  RAWTOH_REDIRECT_URI: https://obs.$DOMAIN/callback
+  RAWTOH_SCOPES: "openid profile email module:install"
+  RAWTOH_WS_URL: ws://rpc:10006

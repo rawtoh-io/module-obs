@@ -1,0 +1,42 @@
+# Module OBS — Caddy site block (standalone / external-proxy modes).
+# The module is served at obs.<DOMAIN>.
+#
+# Standalone: imported by this repo's root Caddyfile (see
+# docker-compose.caddy.yml — mounted at /etc/caddy/module-obs.caddy).
+#
+# Behind your own Caddy: copy this file into a directory imported by your
+# main Caddyfile (e.g. `import /etc/caddy/sites/*.caddy`) and run
+# `caddy reload`. Requires obs-web and obs-api reachable on the same
+# Docker network.
+#
+# Note: the obs-web nginx sets the CSP header (app-specific) — Caddy only
+# adds the generic security headers here.
+
+obs.{$DOMAIN} {
+	encode zstd gzip
+
+	# Security headers
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	# API (Hono): REST + SSE + agent WebSocket
+	handle /api/* {
+		reverse_proxy obs-api:10700
+	}
+
+	# Rawtoh OIDC callback
+	handle /callback* {
+		reverse_proxy obs-api:10700
+	}
+
+	# SPA (nginx container serving the Vite build)
+	handle {
+		reverse_proxy obs-web:80
+	}
+}

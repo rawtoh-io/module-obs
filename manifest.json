@@ -1,0 +1,1256 @@
+{
+  "methods": [
+    {
+      "name": "general.get_version",
+      "summary": "Get OBS and obs-websocket version info",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "general.get_stats",
+      "summary": "Get OBS performance statistics",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "general.trigger_hotkey",
+      "summary": "Trigger an OBS hotkey by name",
+      "params": [
+        {
+          "name": "hotkey",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Hotkey name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "studio.get_mode",
+      "summary": "Check if studio mode is enabled",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "studio.set_mode",
+      "summary": "Enable or disable studio mode",
+      "params": [
+        {
+          "name": "enabled",
+          "schema": {
+            "type": "boolean"
+          },
+          "summary": "Enable state",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene.list",
+      "summary": "List all scenes (current program/preview included)",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene.get_current",
+      "summary": "Get the current program scene",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene.set_current",
+      "summary": "Switch the program scene",
+      "params": [
+        {
+          "name": "scene",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Scene name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene.get_preview",
+      "summary": "Get the current preview scene (studio mode)",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene.set_preview",
+      "summary": "Set the preview scene (studio mode)",
+      "params": [
+        {
+          "name": "scene",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Scene name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene.create",
+      "summary": "Create a new scene",
+      "params": [
+        {
+          "name": "scene",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Name of the scene to create",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene.remove",
+      "summary": "Remove a scene",
+      "params": [
+        {
+          "name": "scene",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Scene name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene_item.list",
+      "summary": "List items of a scene",
+      "params": [
+        {
+          "name": "scene",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Scene name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene_item.get_enabled",
+      "summary": "Get the enable state of a scene item",
+      "params": [
+        {
+          "name": "scene",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Scene name",
+          "required": true
+        },
+        {
+          "name": "item_id",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Scene item ID",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "scene_item.set_enabled",
+      "summary": "Show or hide a scene item",
+      "params": [
+        {
+          "name": "scene",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Scene name",
+          "required": true
+        },
+        {
+          "name": "item_id",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Scene item ID",
+          "required": true
+        },
+        {
+          "name": "enabled",
+          "schema": {
+            "type": "boolean"
+          },
+          "summary": "Enable state",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "input.list",
+      "summary": "List inputs (optionally filtered by kind)",
+      "params": [
+        {
+          "name": "kind",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Restrict to an input kind"
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "input.get_mute",
+      "summary": "Get the mute state of an input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "input.set_mute",
+      "summary": "Mute or unmute an input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        },
+        {
+          "name": "muted",
+          "schema": {
+            "type": "boolean"
+          },
+          "summary": "Mute state",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "input.toggle_mute",
+      "summary": "Toggle the mute state of an input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "input.get_volume",
+      "summary": "Get the volume of an input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "input.set_volume",
+      "summary": "Set the volume of an input (dB or multiplier)",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        },
+        {
+          "name": "volume_db",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Volume in dB"
+        },
+        {
+          "name": "volume_mul",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Volume multiplier"
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "stream.get_status",
+      "summary": "Get stream output status",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "stream.start",
+      "summary": "Start streaming",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "stream.stop",
+      "summary": "Stop streaming",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "stream.toggle",
+      "summary": "Toggle streaming",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "stream.send_caption",
+      "summary": "Send a caption on the stream",
+      "params": [
+        {
+          "name": "caption",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Caption text",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "record.get_status",
+      "summary": "Get record output status",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "record.start",
+      "summary": "Start recording",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "record.stop",
+      "summary": "Stop recording",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "record.toggle",
+      "summary": "Toggle recording",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "record.pause",
+      "summary": "Pause recording",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "record.resume",
+      "summary": "Resume recording",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "record.toggle_pause",
+      "summary": "Toggle record pause",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "replay_buffer.get_status",
+      "summary": "Get replay buffer status",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "replay_buffer.start",
+      "summary": "Start the replay buffer",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "replay_buffer.stop",
+      "summary": "Stop the replay buffer",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "replay_buffer.toggle",
+      "summary": "Toggle the replay buffer",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "replay_buffer.save",
+      "summary": "Save the replay buffer to disk",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.get_status",
+      "summary": "Get the status of a media input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.play",
+      "summary": "Play a media input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.pause",
+      "summary": "Pause a media input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.restart",
+      "summary": "Restart a media input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.stop",
+      "summary": "Stop a media input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.next",
+      "summary": "Next track on a media input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.previous",
+      "summary": "Previous track on a media input",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "media.set_time",
+      "summary": "Seek a media input (milliseconds)",
+      "params": [
+        {
+          "name": "input",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Input name",
+          "required": true
+        },
+        {
+          "name": "time",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Cursor position in ms",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "transition.list",
+      "summary": "List scene transitions",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "transition.get_current",
+      "summary": "Get the current scene transition",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "transition.set_current",
+      "summary": "Set the current scene transition",
+      "params": [
+        {
+          "name": "transition",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Transition name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "transition.set_duration",
+      "summary": "Set the transition duration (milliseconds)",
+      "params": [
+        {
+          "name": "duration",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Duration in ms",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "transition.trigger",
+      "summary": "Trigger the current studio mode transition",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "filter.list",
+      "summary": "List filters of a source",
+      "params": [
+        {
+          "name": "source",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Source name",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "filter.set_enabled",
+      "summary": "Enable or disable a source filter",
+      "params": [
+        {
+          "name": "source",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Source name",
+          "required": true
+        },
+        {
+          "name": "filter",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Filter name",
+          "required": true
+        },
+        {
+          "name": "enabled",
+          "schema": {
+            "type": "boolean"
+          },
+          "summary": "Enable state",
+          "required": true
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "virtual_cam.get_status",
+      "summary": "Get virtual camera status",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "virtual_cam.start",
+      "summary": "Start the virtual camera",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "virtual_cam.stop",
+      "summary": "Stop the virtual camera",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "virtual_cam.toggle",
+      "summary": "Toggle the virtual camera",
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "screenshot.get",
+      "summary": "Screenshot a source (returns base64 imageData)",
+      "params": [
+        {
+          "name": "source",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Source name",
+          "required": true
+        },
+        {
+          "name": "format",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "Image format (png, jpg...)"
+        },
+        {
+          "name": "width",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Image width"
+        },
+        {
+          "name": "height",
+          "schema": {
+            "type": "number"
+          },
+          "summary": "Image height"
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "obs.call",
+      "summary": "Generic obs-websocket passthrough",
+      "params": [
+        {
+          "name": "requestType",
+          "schema": {
+            "type": "string"
+          },
+          "summary": "obs-websocket request type",
+          "required": true
+        },
+        {
+          "name": "requestData",
+          "schema": {
+            "type": "object"
+          },
+          "summary": "obs-websocket request data"
+        }
+      ],
+      "result": {
+        "type": "object"
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "scene.current_changed",
+      "summary": "Program scene changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "scene_name": {
+            "type": "string",
+            "description": "Name of the scene that was switched to"
+          },
+          "scene_uuid": {
+            "type": "string",
+            "description": "UUID of the scene that was switched to"
+          }
+        }
+      }
+    },
+    {
+      "name": "scene.preview_changed",
+      "summary": "Preview scene changed (studio mode)",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "scene_name": {
+            "type": "string",
+            "description": "Name of the scene that was switched to"
+          },
+          "scene_uuid": {
+            "type": "string",
+            "description": "UUID of the scene that was switched to"
+          }
+        }
+      }
+    },
+    {
+      "name": "scene.list_changed",
+      "summary": "Scene list changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "scenes": {
+            "type": "array",
+            "description": "Updated array of scenes",
+            "items": {
+              "type": "object",
+              "properties": {
+                "scene_index": {
+                  "type": "integer",
+                  "description": "Index of the scene in the list"
+                },
+                "scene_name": {
+                  "type": "string",
+                  "description": "Name of the scene"
+                },
+                "scene_uuid": {
+                  "type": "string",
+                  "description": "UUID of the scene"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scene.created",
+      "summary": "A scene was created",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "scene_name": {
+            "type": "string",
+            "description": "Name of the new scene"
+          },
+          "scene_uuid": {
+            "type": "string",
+            "description": "UUID of the new scene"
+          },
+          "is_group": {
+            "type": "boolean",
+            "description": "Whether the new scene is a group"
+          }
+        }
+      }
+    },
+    {
+      "name": "scene.removed",
+      "summary": "A scene was removed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "scene_name": {
+            "type": "string",
+            "description": "Name of the removed scene"
+          },
+          "scene_uuid": {
+            "type": "string",
+            "description": "UUID of the removed scene"
+          },
+          "is_group": {
+            "type": "boolean",
+            "description": "Whether the scene was a group"
+          }
+        }
+      }
+    },
+    {
+      "name": "scene.name_changed",
+      "summary": "A scene was renamed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "scene_uuid": {
+            "type": "string",
+            "description": "UUID of the scene"
+          },
+          "old_scene_name": {
+            "type": "string",
+            "description": "Old name of the scene"
+          },
+          "scene_name": {
+            "type": "string",
+            "description": "New name of the scene"
+          }
+        }
+      }
+    },
+    {
+      "name": "scene_item.enable_state_changed",
+      "summary": "A scene item was shown or hidden",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "scene_name": {
+            "type": "string",
+            "description": "Name of the scene the item is in"
+          },
+          "scene_uuid": {
+            "type": "string",
+            "description": "UUID of the scene the item is in"
+          },
+          "scene_item_id": {
+            "type": "integer",
+            "description": "Numeric ID of the scene item"
+          },
+          "scene_item_enabled": {
+            "type": "boolean",
+            "description": "Whether the scene item is enabled (visible)"
+          }
+        }
+      }
+    },
+    {
+      "name": "input.mute_state_changed",
+      "summary": "An input was muted or unmuted",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "input_name": {
+            "type": "string",
+            "description": "Name of the input"
+          },
+          "input_uuid": {
+            "type": "string",
+            "description": "UUID of the input"
+          },
+          "input_muted": {
+            "type": "boolean",
+            "description": "Whether the input is muted"
+          }
+        }
+      }
+    },
+    {
+      "name": "input.volume_changed",
+      "summary": "An input volume changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "input_name": {
+            "type": "string",
+            "description": "Name of the input"
+          },
+          "input_uuid": {
+            "type": "string",
+            "description": "UUID of the input"
+          },
+          "input_volume_mul": {
+            "type": "number",
+            "description": "New volume level multiplier"
+          },
+          "input_volume_db": {
+            "type": "number",
+            "description": "New volume level in dB"
+          }
+        }
+      }
+    },
+    {
+      "name": "input.created",
+      "summary": "An input was created",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "input_name": {
+            "type": "string",
+            "description": "Name of the input"
+          },
+          "input_uuid": {
+            "type": "string",
+            "description": "UUID of the input"
+          },
+          "input_kind": {
+            "type": "string",
+            "description": "The kind of the input"
+          },
+          "unversioned_input_kind": {
+            "type": "string",
+            "description": "The unversioned kind of input (aka no `_v2` stuff)"
+          },
+          "input_kind_caps": {
+            "type": "integer",
+            "description": "Bitflag value for the caps that an input supports"
+          },
+          "input_settings": {
+            "type": "object",
+            "description": "The settings configured to the input when it was created"
+          },
+          "default_input_settings": {
+            "type": "object",
+            "description": "The default settings for the input"
+          }
+        }
+      }
+    },
+    {
+      "name": "input.removed",
+      "summary": "An input was removed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "input_name": {
+            "type": "string",
+            "description": "Name of the input"
+          },
+          "input_uuid": {
+            "type": "string",
+            "description": "UUID of the input"
+          }
+        }
+      }
+    },
+    {
+      "name": "input.name_changed",
+      "summary": "An input was renamed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "input_uuid": {
+            "type": "string",
+            "description": "UUID of the input"
+          },
+          "old_input_name": {
+            "type": "string",
+            "description": "Old name of the input"
+          },
+          "input_name": {
+            "type": "string",
+            "description": "New name of the input"
+          }
+        }
+      }
+    },
+    {
+      "name": "stream.state_changed",
+      "summary": "Stream output state changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "output_active": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          },
+          "output_state": {
+            "type": "string",
+            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+          }
+        }
+      }
+    },
+    {
+      "name": "record.state_changed",
+      "summary": "Record output state changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "output_active": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          },
+          "output_state": {
+            "type": "string",
+            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+          },
+          "output_path": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "File name for the saved recording, if record stopped. `null` otherwise"
+          }
+        }
+      }
+    },
+    {
+      "name": "replay_buffer.state_changed",
+      "summary": "Replay buffer state changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "output_active": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          },
+          "output_state": {
+            "type": "string",
+            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+          }
+        }
+      }
+    },
+    {
+      "name": "transition.current_changed",
+      "summary": "Current scene transition changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "transition_name": {
+            "type": "string",
+            "description": "Name of the new transition"
+          },
+          "transition_uuid": {
+            "type": "string",
+            "description": "UUID of the new transition"
+          }
+        }
+      }
+    },
+    {
+      "name": "transition.started",
+      "summary": "A scene transition started",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "transition_name": {
+            "type": "string",
+            "description": "Scene transition name"
+          },
+          "transition_uuid": {
+            "type": "string",
+            "description": "Scene transition UUID"
+          }
+        }
+      }
+    },
+    {
+      "name": "transition.ended",
+      "summary": "A scene transition ended",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "transition_name": {
+            "type": "string",
+            "description": "Scene transition name"
+          },
+          "transition_uuid": {
+            "type": "string",
+            "description": "Scene transition UUID"
+          }
+        }
+      }
+    },
+    {
+      "name": "filter.enable_state_changed",
+      "summary": "A source filter was enabled or disabled",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "source_name": {
+            "type": "string",
+            "description": "Name of the source the filter is on"
+          },
+          "filter_name": {
+            "type": "string",
+            "description": "Name of the filter"
+          },
+          "filter_enabled": {
+            "type": "boolean",
+            "description": "Whether the filter is enabled"
+          }
+        }
+      }
+    },
+    {
+      "name": "studio_mode.state_changed",
+      "summary": "Studio mode was enabled or disabled",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "studio_mode_enabled": {
+            "type": "boolean",
+            "description": "Whether studio mode is enabled"
+          }
+        }
+      }
+    },
+    {
+      "name": "virtual_cam.state_changed",
+      "summary": "Virtual camera state changed",
+      "payload": {
+        "type": "object",
+        "properties": {
+          "output_active": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          },
+          "output_state": {
+            "type": "string",
+            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+          }
+        }
+      }
+    },
+    {
+      "name": "exit.started",
+      "summary": "OBS is shutting down",
+      "payload": {
+        "type": "object"
+      }
+    }
+  ]
+}

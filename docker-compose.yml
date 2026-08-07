@@ -1,0 +1,85 @@
+name: module-obs
+
+# Module OBS — production stack (API + PostgreSQL + SPA).
+# The SPA is a self-contained nginx image; Caddy (or your proxy)
+# reverse-proxies both the SPA and the API.
+#
+# Images are built by GitHub Actions and pulled from GHCR. To build
+# locally instead, add --build to the compose commands below.
+#
+# Two deployment modes:
+#
+#   Standalone (own server, Caddy included, automatic TLS):
+#     docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
+#
+#   Behind your own reverse proxy (Caddy, Traefik, ...):
+#     docker compose -f docker-compose.yml -f docker-compose.proxy.yml up -d
+#     (set PROXY_NETWORK in .env — see docker-compose.proxy.yml)
+#
+# Required .env: PUBLIC_DOMAIN, POSTGRES_PASSWORD, SESSION_SECRET,
+#   ENCRYPTION_KEY,
+#   RAWTOH_CLIENT_ID, RAWTOH_CLIENT_SECRET, RAWTOH_ISSUER, RAWTOH_WS_URL
+#   (+ ACME_EMAIL in standalone mode — see .env.example)
+
+services:
+  obs-postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-rawtoh}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+      POSTGRES_DB: obs
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-rawtoh}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  obs-api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    image: ghcr.io/rawtoh-io/module-obs-api:${IMAGE_TAG:-production}
+    restart: unless-stopped
+    environment:
+      PORT: "10700"
+      DATABASE_URL: postgres://${POSTGRES_USER:-rawtoh}:${POSTGRES_PASSWORD}@obs-postgres:5432/obs
+      RAWTOH_CLIENT_ID: ${RAWTOH_CLIENT_ID}
+      RAWTOH_CLIENT_SECRET: ${RAWTOH_CLIENT_SECRET}
+      RAWTOH_ISSUER: ${RAWTOH_ISSUER}
+      RAWTOH_REDIRECT_URI: https://${PUBLIC_DOMAIN}/callback
+      RAWTOH_SCOPES: "openid profile email module:install"
+      RAWTOH_WS_URL: ${RAWTOH_WS_URL}
+      APP_URL: https://${PUBLIC_DOMAIN}
+      SESSION_SECRET: ${SESSION_SECRET:?SESSION_SECRET is required}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY:?ENCRYPTION_KEY is required}
+    depends_on:
+      obs-postgres:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "bun",
+          "-e",
+          "fetch('http://localhost:10700/api/auth/me').then(()=>process.exit(0)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # SPA static build — self-contained nginx image serving on :80.
+  # Caddy (standalone mode) or your proxy reverse-proxies to it.
+  obs-web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    image: ghcr.io/rawtoh-io/module-obs-web:${IMAGE_TAG:-production}
+    restart: unless-stopped
+
+volumes:
+  pgdata:

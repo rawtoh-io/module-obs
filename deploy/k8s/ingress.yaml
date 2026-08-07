@@ -1,0 +1,46 @@
+# Ingress — module served at obs.$DOMAIN.
+# $DOMAIN is substituted at apply time.
+#
+# Uses the cert-manager ClusterIssuer and the shared `security-headers`
+# Traefik middleware from the main Rawtoh deployment (same namespace).
+# CSP is set by the obs-web nginx (app-specific).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: obs
+  namespace: rawtoh
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    traefik.ingress.kubernetes.io/router.middlewares: rawtoh-security-headers@kubernetescrd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts: [obs.$DOMAIN]
+      secretName: obs-tls
+  rules:
+    - host: obs.$DOMAIN
+      http:
+        paths:
+          # Longest prefixes win: API paths → obs-api, the rest → SPA.
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: obs-api
+                port:
+                  number: 10700
+          # Rawtoh OIDC callback
+          - path: /callback
+            pathType: Prefix
+            backend:
+              service:
+                name: obs-api
+                port:
+                  number: 10700
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: obs-web
+                port:
+                  number: 80
