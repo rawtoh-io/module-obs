@@ -25,21 +25,6 @@ import { getAccount, type Account } from "./db";
 //   "obs-event" → { accountId, event, data }                (hub fan-out)
 // ---------------------------------------------------------------------------
 
-// obs-websocket event data uses camelCase keys, but the hub convention (and
-// the module manifest) is snake_case payloads — convert keys recursively.
-function toSnakeCaseKeys(value: unknown): unknown {
-	if (Array.isArray(value)) return value.map(toSnakeCaseKeys);
-	if (value && typeof value === "object") {
-		return Object.fromEntries(
-			Object.entries(value as Record<string, unknown>).map(([key, v]) => [
-				key.replace(/([A-Z])/g, (c) => `_${c.toLowerCase()}`),
-				toSnakeCaseKeys(v),
-			]),
-		);
-	}
-	return value;
-}
-
 export const agentEvents = new EventEmitter();
 
 interface PendingCall {
@@ -240,7 +225,7 @@ export async function handleAgentMessage(session: AgentSession, raw: string): Pr
       agentEvents.emit("obs-event", {
         accountId: msg.accountId,
         event: msg.event,
-        data: toSnakeCaseKeys(msg.data),
+        data: msg.data,
       });
       break;
     }

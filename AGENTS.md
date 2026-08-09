@@ -93,11 +93,14 @@ env vars, `strict: true`, hooks-only React Query (components never import
 ### RPC methods (hub → OBS)
 
 Table-driven in `rpc.ts`: `OBS_METHODS` maps each RPC name to an obs-websocket
-request type + param mapper (accepts snake_case and camelCase aliases).
-`obs.call({ requestType, requestData? })` is a generic passthrough. Responses
-are forwarded unchanged (obs-websocket camelCase fields); event payloads are
-converted to snake_case keys in `agents.ts` before reaching the hub (hub
-convention, matching the manifest).
+request type + param mapper. `obs.call({ requestType, requestData? })` is a
+generic passthrough.
+
+Field names are camelCase everywhere, matching the obs-websocket protocol
+docs: responses and event payloads are both forwarded unchanged, and declared
+param names follow suit. The param mappers still accept legacy snake_case
+aliases (`scene_name`, `item_id`, …) so older scripts keep working — event
+payloads have no such fallback.
 
 ### Agent protocol (backend ↔ browser)
 

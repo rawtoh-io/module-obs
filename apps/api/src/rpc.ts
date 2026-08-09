@@ -6,8 +6,10 @@ import type { WsClient } from "./ws";
 // ---------------------------------------------------------------------------
 // JSON-RPC methods registered on the hub connection, per account.
 // Each method maps to an obs-websocket request proxied through the account's
-// browser agent. Responses are passed through unchanged (obs-websocket
-// camelCase fields); event payloads are snake_cased in agents.ts.
+// browser agent. Responses and event payloads are both passed through
+// unchanged, so every field keeps the obs-websocket camelCase name used by
+// the protocol docs. Param names follow suit: each one is read under the
+// exact obs-websocket field name it maps to, with no aliases.
 // ---------------------------------------------------------------------------
 
 interface AccountLike {
@@ -17,6 +19,10 @@ interface AccountLike {
 
 type Params = Record<string, unknown>;
 
+function missing(name: string): JSONRPCErrorException {
+  return new JSONRPCErrorException(`Missing parameter '${name}'`, -32602);
+}
+
 function asObject(params: unknown): Params {
   // Hub calls with an object; tolerate a single positional object too.
   if (params && typeof params === "object" && !Array.isArray(params)) return params as Params;
@@ -24,44 +30,32 @@ function asObject(params: unknown): Params {
   return {};
 }
 
-function reqStr(p: Params, ...names: string[]): string {
-  for (const name of names) {
-    const v = p[name];
-    if (typeof v === "string" && v !== "") return v;
-  }
-  throw new JSONRPCErrorException(`Missing parameter '${names[0]}'`, -32602);
+function optStr(p: Params, name: string): string | undefined {
+  const v = p[name];
+  return typeof v === "string" && v !== "" ? v : undefined;
 }
 
-function optStr(p: Params, ...names: string[]): string | undefined {
-  for (const name of names) {
-    const v = p[name];
-    if (typeof v === "string" && v !== "") return v;
-  }
-  return undefined;
+function reqStr(p: Params, name: string): string {
+  const v = optStr(p, name);
+  if (v === undefined) throw missing(name);
+  return v;
 }
 
-function reqNum(p: Params, ...names: string[]): number {
-  for (const name of names) {
-    const v = p[name];
-    if (typeof v === "number" && Number.isFinite(v)) return v;
-  }
-  throw new JSONRPCErrorException(`Missing parameter '${names[0]}'`, -32602);
+function optNum(p: Params, name: string): number | undefined {
+  const v = p[name];
+  return typeof v === "number" && Number.isFinite(v) ? v : undefined;
 }
 
-function optNum(p: Params, ...names: string[]): number | undefined {
-  for (const name of names) {
-    const v = p[name];
-    if (typeof v === "number" && Number.isFinite(v)) return v;
-  }
-  return undefined;
+function reqNum(p: Params, name: string): number {
+  const v = optNum(p, name);
+  if (v === undefined) throw missing(name);
+  return v;
 }
 
-function reqBool(p: Params, ...names: string[]): boolean {
-  for (const name of names) {
-    const v = p[name];
-    if (typeof v === "boolean") return v;
-  }
-  throw new JSONRPCErrorException(`Missing parameter '${names[0]}'`, -32602);
+function reqBool(p: Params, name: string): boolean {
+  const v = p[name];
+  if (typeof v !== "boolean") throw missing(name);
+  return v;
 }
 
 type ObsMethodDef = (p: Params) => { requestType: string; requestData?: Record<string, unknown> };
@@ -73,14 +67,14 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
   "general.get_stats": () => ({ requestType: "GetStats" }),
   "general.trigger_hotkey": (p) => ({
     requestType: "TriggerHotkeyByName",
-    requestData: { hotkeyName: reqStr(p, "hotkey", "name", "hotkeyName") },
+    requestData: { hotkeyName: reqStr(p, "hotkeyName") },
   }),
 
   // Studio mode
   "studio.get_mode": () => ({ requestType: "GetStudioModeEnabled" }),
   "studio.set_mode": (p) => ({
     requestType: "SetStudioModeEnabled",
-    requestData: { studioModeEnabled: reqBool(p, "enabled") },
+    requestData: { studioModeEnabled: reqBool(p, "studioModeEnabled") },
   }),
 
   // Scenes
@@ -88,77 +82,77 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
   "scene.get_current": () => ({ requestType: "GetCurrentProgramScene" }),
   "scene.set_current": (p) => ({
     requestType: "SetCurrentProgramScene",
-    requestData: { sceneName: reqStr(p, "scene", "scene_name", "sceneName") },
+    requestData: { sceneName: reqStr(p, "sceneName") },
   }),
   "scene.get_preview": () => ({ requestType: "GetCurrentPreviewScene" }),
   "scene.set_preview": (p) => ({
     requestType: "SetCurrentPreviewScene",
-    requestData: { sceneName: reqStr(p, "scene", "scene_name", "sceneName") },
+    requestData: { sceneName: reqStr(p, "sceneName") },
   }),
   "scene.create": (p) => ({
     requestType: "CreateScene",
-    requestData: { sceneName: reqStr(p, "scene", "name", "sceneName") },
+    requestData: { sceneName: reqStr(p, "sceneName") },
   }),
   "scene.remove": (p) => ({
     requestType: "RemoveScene",
-    requestData: { sceneName: reqStr(p, "scene", "scene_name", "sceneName") },
+    requestData: { sceneName: reqStr(p, "sceneName") },
   }),
 
   // Scene items
   "scene_item.list": (p) => ({
     requestType: "GetSceneItemList",
-    requestData: { sceneName: reqStr(p, "scene", "scene_name", "sceneName") },
+    requestData: { sceneName: reqStr(p, "sceneName") },
   }),
   "scene_item.get_enabled": (p) => ({
     requestType: "GetSceneItemEnabled",
     requestData: {
-      sceneName: reqStr(p, "scene", "scene_name", "sceneName"),
-      sceneItemId: reqNum(p, "item_id", "itemId", "sceneItemId"),
+      sceneName: reqStr(p, "sceneName"),
+      sceneItemId: reqNum(p, "sceneItemId"),
     },
   }),
   "scene_item.set_enabled": (p) => ({
     requestType: "SetSceneItemEnabled",
     requestData: {
-      sceneName: reqStr(p, "scene", "scene_name", "sceneName"),
-      sceneItemId: reqNum(p, "item_id", "itemId", "sceneItemId"),
-      sceneItemEnabled: reqBool(p, "enabled"),
+      sceneName: reqStr(p, "sceneName"),
+      sceneItemId: reqNum(p, "sceneItemId"),
+      sceneItemEnabled: reqBool(p, "sceneItemEnabled"),
     },
   }),
 
   // Inputs
   "input.list": (p) => ({
     requestType: "GetInputList",
-    requestData: optStr(p, "kind", "inputKind") ? { inputKind: optStr(p, "kind", "inputKind") } : undefined,
+    requestData: optStr(p, "inputKind") ? { inputKind: optStr(p, "inputKind") } : undefined,
   }),
   "input.get_mute": (p) => ({
     requestType: "GetInputMute",
-    requestData: { inputName: reqStr(p, "input", "input_name", "inputName") },
+    requestData: { inputName: reqStr(p, "inputName") },
   }),
   "input.set_mute": (p) => ({
     requestType: "SetInputMute",
     requestData: {
-      inputName: reqStr(p, "input", "input_name", "inputName"),
-      inputMuted: reqBool(p, "muted"),
+      inputName: reqStr(p, "inputName"),
+      inputMuted: reqBool(p, "inputMuted"),
     },
   }),
   "input.toggle_mute": (p) => ({
     requestType: "ToggleInputMute",
-    requestData: { inputName: reqStr(p, "input", "input_name", "inputName") },
+    requestData: { inputName: reqStr(p, "inputName") },
   }),
   "input.get_volume": (p) => ({
     requestType: "GetInputVolume",
-    requestData: { inputName: reqStr(p, "input", "input_name", "inputName") },
+    requestData: { inputName: reqStr(p, "inputName") },
   }),
   "input.set_volume": (p) => {
-    const inputVolumeDb = optNum(p, "volume_db", "volumeDb");
-    const inputVolumeMul = optNum(p, "volume_mul", "volumeMul");
+    const inputVolumeDb = optNum(p, "inputVolumeDb");
+    const inputVolumeMul = optNum(p, "inputVolumeMul");
     if (inputVolumeDb === undefined && inputVolumeMul === undefined) {
-      throw new JSONRPCErrorException("Missing parameter 'volume_db' (or 'volume_mul')", -32602);
+      throw new JSONRPCErrorException("Missing parameter 'inputVolumeDb' (or 'inputVolumeMul')", -32602);
     }
     return {
       requestType: "SetInputVolume",
       requestData: {
-        inputName: reqStr(p, "input", "input_name", "inputName"),
+        inputName: reqStr(p, "inputName"),
         ...(inputVolumeDb !== undefined ? { inputVolumeDb } : {}),
         ...(inputVolumeMul !== undefined ? { inputVolumeMul } : {}),
       },
@@ -172,7 +166,7 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
   "stream.toggle": () => ({ requestType: "ToggleStream" }),
   "stream.send_caption": (p) => ({
     requestType: "SendStreamCaption",
-    requestData: { captionText: reqStr(p, "caption", "text", "captionText") },
+    requestData: { captionText: reqStr(p, "captionText") },
   }),
 
   // Record
@@ -194,7 +188,7 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
   // Media inputs
   "media.get_status": (p) => ({
     requestType: "GetMediaInputStatus",
-    requestData: { inputName: reqStr(p, "input", "input_name", "inputName") },
+    requestData: { inputName: reqStr(p, "inputName") },
   }),
   "media.play": (p) => mediaAction(p, "OBS_WEBSOCKET_MEDIA_INPUT_ACTION_PLAY"),
   "media.pause": (p) => mediaAction(p, "OBS_WEBSOCKET_MEDIA_INPUT_ACTION_PAUSE"),
@@ -205,8 +199,8 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
   "media.set_time": (p) => ({
     requestType: "SetMediaInputCursor",
     requestData: {
-      inputName: reqStr(p, "input", "input_name", "inputName"),
-      mediaCursor: reqNum(p, "time", "cursor", "mediaCursor"),
+      inputName: reqStr(p, "inputName"),
+      mediaCursor: reqNum(p, "mediaCursor"),
     },
   }),
 
@@ -215,25 +209,25 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
   "transition.get_current": () => ({ requestType: "GetCurrentSceneTransition" }),
   "transition.set_current": (p) => ({
     requestType: "SetCurrentSceneTransition",
-    requestData: { transitionName: reqStr(p, "transition", "transition_name", "transitionName") },
+    requestData: { transitionName: reqStr(p, "transitionName") },
   }),
   "transition.set_duration": (p) => ({
     requestType: "SetCurrentSceneTransitionDuration",
-    requestData: { transitionDuration: reqNum(p, "duration") },
+    requestData: { transitionDuration: reqNum(p, "transitionDuration") },
   }),
   "transition.trigger": () => ({ requestType: "TriggerStudioModeTransition" }),
 
   // Source filters
   "filter.list": (p) => ({
     requestType: "GetSourceFilterList",
-    requestData: { sourceName: reqStr(p, "source", "source_name", "sourceName") },
+    requestData: { sourceName: reqStr(p, "sourceName") },
   }),
   "filter.set_enabled": (p) => ({
     requestType: "SetSourceFilterEnabled",
     requestData: {
-      sourceName: reqStr(p, "source", "source_name", "sourceName"),
-      filterName: reqStr(p, "filter", "filter_name", "filterName"),
-      filterEnabled: reqBool(p, "enabled"),
+      sourceName: reqStr(p, "sourceName"),
+      filterName: reqStr(p, "filterName"),
+      filterEnabled: reqBool(p, "filterEnabled"),
     },
   }),
 
@@ -247,13 +241,13 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
   "screenshot.get": (p) => ({
     requestType: "GetSourceScreenshot",
     requestData: {
-      sourceName: reqStr(p, "source", "source_name", "sourceName"),
-      imageFormat: optStr(p, "format", "imageFormat") ?? "png",
-      ...(optNum(p, "width", "imageWidth") !== undefined
-        ? { imageWidth: optNum(p, "width", "imageWidth") }
+      sourceName: reqStr(p, "sourceName"),
+      imageFormat: optStr(p, "imageFormat") ?? "png",
+      ...(optNum(p, "imageWidth") !== undefined
+        ? { imageWidth: optNum(p, "imageWidth") }
         : {}),
-      ...(optNum(p, "height", "imageHeight") !== undefined
-        ? { imageHeight: optNum(p, "height", "imageHeight") }
+      ...(optNum(p, "imageHeight") !== undefined
+        ? { imageHeight: optNum(p, "imageHeight") }
         : {}),
     },
   }),
@@ -263,7 +257,7 @@ function mediaAction(p: Params, mediaAction: string): { requestType: string; req
   return {
     requestType: "TriggerMediaInputAction",
     requestData: {
-      inputName: reqStr(p, "input", "input_name", "inputName"),
+      inputName: reqStr(p, "inputName"),
       mediaAction,
     },
   };
@@ -306,7 +300,7 @@ export function registerMethods(client: WsClient, conn: AccountLike): void {
   // Generic passthrough: obs.call({ requestType, requestData? })
   client.rpc.addMethod("obs.call", async (params: unknown) => {
     const p = asObject(params);
-    const requestType = reqStr(p, "requestType", "request_type");
+    const requestType = reqStr(p, "requestType");
     const requestData =
       p.requestData && typeof p.requestData === "object" && !Array.isArray(p.requestData)
         ? (p.requestData as Record<string, unknown>)

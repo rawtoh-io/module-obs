@@ -4,14 +4,118 @@
       "name": "general.get_version",
       "summary": "Get OBS and obs-websocket version info",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "obsVersion": {
+            "type": "string",
+            "description": "Current OBS Studio version"
+          },
+          "obsWebSocketVersion": {
+            "type": "string",
+            "description": "Current obs-websocket version"
+          },
+          "rpcVersion": {
+            "type": "number",
+            "description": "Current latest obs-websocket RPC version"
+          },
+          "availableRequests": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of available RPC requests for the currently negotiated RPC version"
+          },
+          "supportedImageFormats": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Image formats available in `GetSourceScreenshot` and `SaveSourceScreenshot` requests."
+          },
+          "platform": {
+            "type": "string",
+            "description": "Name of the platform. Usually `windows`, `macos`, or `ubuntu` (linux flavor). Not guaranteed to be any of those"
+          },
+          "platformDescription": {
+            "type": "string",
+            "description": "Description of the platform, like `Windows 10 (10.0)`"
+          }
+        },
+        "required": [
+          "obsVersion",
+          "obsWebSocketVersion",
+          "rpcVersion",
+          "availableRequests",
+          "supportedImageFormats",
+          "platform",
+          "platformDescription"
+        ]
       }
     },
     {
       "name": "general.get_stats",
       "summary": "Get OBS performance statistics",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "cpuUsage": {
+            "type": "number",
+            "description": "Current CPU usage in percent"
+          },
+          "memoryUsage": {
+            "type": "number",
+            "description": "Amount of memory in MB currently being used by OBS"
+          },
+          "availableDiskSpace": {
+            "type": "number",
+            "description": "Available disk space on the device being used for recording storage"
+          },
+          "activeFps": {
+            "type": "number",
+            "description": "Current FPS being rendered"
+          },
+          "averageFrameRenderTime": {
+            "type": "number",
+            "description": "Average time in milliseconds that OBS is taking to render a frame"
+          },
+          "renderSkippedFrames": {
+            "type": "number",
+            "description": "Number of frames skipped by OBS in the render thread"
+          },
+          "renderTotalFrames": {
+            "type": "number",
+            "description": "Total number of frames outputted by the render thread"
+          },
+          "outputSkippedFrames": {
+            "type": "number",
+            "description": "Number of frames skipped by OBS in the output thread"
+          },
+          "outputTotalFrames": {
+            "type": "number",
+            "description": "Total number of frames outputted by the output thread"
+          },
+          "webSocketSessionIncomingMessages": {
+            "type": "number",
+            "description": "Total number of messages received by obs-websocket from the client"
+          },
+          "webSocketSessionOutgoingMessages": {
+            "type": "number",
+            "description": "Total number of messages sent by obs-websocket to the client"
+          }
+        },
+        "required": [
+          "cpuUsage",
+          "memoryUsage",
+          "availableDiskSpace",
+          "activeFps",
+          "averageFrameRenderTime",
+          "renderSkippedFrames",
+          "renderTotalFrames",
+          "outputSkippedFrames",
+          "outputTotalFrames",
+          "webSocketSessionIncomingMessages",
+          "webSocketSessionOutgoingMessages"
+        ]
       }
     },
     {
@@ -19,23 +123,33 @@
       "summary": "Trigger an OBS hotkey by name",
       "params": [
         {
-          "name": "hotkey",
+          "name": "hotkeyName",
           "schema": {
             "type": "string"
           },
-          "summary": "Hotkey name",
+          "summary": "Name of the hotkey to trigger",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "studio.get_mode",
       "summary": "Check if studio mode is enabled",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "studioModeEnabled": {
+            "type": "boolean",
+            "description": "Whether studio mode is enabled"
+          }
+        },
+        "required": [
+          "studioModeEnabled"
+        ]
       }
     },
     {
@@ -43,30 +157,87 @@
       "summary": "Enable or disable studio mode",
       "params": [
         {
-          "name": "enabled",
+          "name": "studioModeEnabled",
           "schema": {
             "type": "boolean"
           },
-          "summary": "Enable state",
+          "summary": "True == Enabled, False == Disabled",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "scene.list",
       "summary": "List all scenes (current program/preview included)",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "currentProgramSceneName": {
+            "type": "string",
+            "description": "Current program scene name. Can be `null` if non-main canvas or internal state desync"
+          },
+          "currentProgramSceneUuid": {
+            "type": "string",
+            "description": "Current program scene UUID. Can be `null` if non-main canvas or internal state desync"
+          },
+          "currentPreviewSceneName": {
+            "type": "string",
+            "description": "Current preview scene name. `null` if not in studio mode or non-main canvas"
+          },
+          "currentPreviewSceneUuid": {
+            "type": "string",
+            "description": "Current preview scene UUID. `null` if not in studio mode or non-main canvas"
+          },
+          "scenes": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Array of scenes"
+          }
+        },
+        "required": [
+          "currentProgramSceneName",
+          "currentProgramSceneUuid",
+          "currentPreviewSceneName",
+          "currentPreviewSceneUuid",
+          "scenes"
+        ]
       }
     },
     {
       "name": "scene.get_current",
       "summary": "Get the current program scene",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "sceneName": {
+            "type": "string",
+            "description": "Current program scene name"
+          },
+          "sceneUuid": {
+            "type": "string",
+            "description": "Current program scene UUID"
+          },
+          "currentProgramSceneName": {
+            "type": "string",
+            "description": "Current program scene name (Deprecated)"
+          },
+          "currentProgramSceneUuid": {
+            "type": "string",
+            "description": "Current program scene UUID (Deprecated)"
+          }
+        },
+        "required": [
+          "sceneName",
+          "sceneUuid",
+          "currentProgramSceneName",
+          "currentProgramSceneUuid"
+        ]
       }
     },
     {
@@ -74,23 +245,48 @@
       "summary": "Switch the program scene",
       "params": [
         {
-          "name": "scene",
+          "name": "sceneName",
           "schema": {
             "type": "string"
           },
-          "summary": "Scene name",
+          "summary": "Scene name to set as the current program scene",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "scene.get_preview",
       "summary": "Get the current preview scene (studio mode)",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "sceneName": {
+            "type": "string",
+            "description": "Current preview scene name"
+          },
+          "sceneUuid": {
+            "type": "string",
+            "description": "Current preview scene UUID"
+          },
+          "currentPreviewSceneName": {
+            "type": "string",
+            "description": "Current preview scene name"
+          },
+          "currentPreviewSceneUuid": {
+            "type": "string",
+            "description": "Current preview scene UUID"
+          }
+        },
+        "required": [
+          "sceneName",
+          "sceneUuid",
+          "currentPreviewSceneName",
+          "currentPreviewSceneUuid"
+        ]
       }
     },
     {
@@ -98,16 +294,17 @@
       "summary": "Set the preview scene (studio mode)",
       "params": [
         {
-          "name": "scene",
+          "name": "sceneName",
           "schema": {
             "type": "string"
           },
-          "summary": "Scene name",
+          "summary": "Scene name to set as the current preview scene",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -115,16 +312,25 @@
       "summary": "Create a new scene",
       "params": [
         {
-          "name": "scene",
+          "name": "sceneName",
           "schema": {
             "type": "string"
           },
-          "summary": "Name of the scene to create",
+          "summary": "Name for the new scene",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "sceneUuid": {
+            "type": "string",
+            "description": "UUID of the created scene"
+          }
+        },
+        "required": [
+          "sceneUuid"
+        ]
       }
     },
     {
@@ -132,16 +338,17 @@
       "summary": "Remove a scene",
       "params": [
         {
-          "name": "scene",
+          "name": "sceneName",
           "schema": {
             "type": "string"
           },
-          "summary": "Scene name",
+          "summary": "Name of the scene to remove",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -149,16 +356,28 @@
       "summary": "List items of a scene",
       "params": [
         {
-          "name": "scene",
+          "name": "sceneName",
           "schema": {
             "type": "string"
           },
-          "summary": "Scene name",
+          "summary": "Name of the scene to get the items of",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "sceneItems": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Array of scene items in the scene"
+          }
+        },
+        "required": [
+          "sceneItems"
+        ]
       }
     },
     {
@@ -166,24 +385,33 @@
       "summary": "Get the enable state of a scene item",
       "params": [
         {
-          "name": "scene",
+          "name": "sceneName",
           "schema": {
             "type": "string"
           },
-          "summary": "Scene name",
+          "summary": "Name of the scene the item is in",
           "required": true
         },
         {
-          "name": "item_id",
+          "name": "sceneItemId",
           "schema": {
             "type": "number"
           },
-          "summary": "Scene item ID",
+          "summary": "Numeric ID of the scene item",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "sceneItemEnabled": {
+            "type": "boolean",
+            "description": "Whether the scene item is enabled. `true` for enabled, `false` for disabled"
+          }
+        },
+        "required": [
+          "sceneItemEnabled"
+        ]
       }
     },
     {
@@ -191,32 +419,33 @@
       "summary": "Show or hide a scene item",
       "params": [
         {
-          "name": "scene",
+          "name": "sceneName",
           "schema": {
             "type": "string"
           },
-          "summary": "Scene name",
+          "summary": "Name of the scene the item is in",
           "required": true
         },
         {
-          "name": "item_id",
+          "name": "sceneItemId",
           "schema": {
             "type": "number"
           },
-          "summary": "Scene item ID",
+          "summary": "Numeric ID of the scene item",
           "required": true
         },
         {
-          "name": "enabled",
+          "name": "sceneItemEnabled",
           "schema": {
             "type": "boolean"
           },
-          "summary": "Enable state",
+          "summary": "New enable state of the scene item",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -224,15 +453,27 @@
       "summary": "List inputs (optionally filtered by kind)",
       "params": [
         {
-          "name": "kind",
+          "name": "inputKind",
           "schema": {
             "type": "string"
           },
-          "summary": "Restrict to an input kind"
+          "summary": "Restrict the array to only inputs of the specified kind"
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Array of inputs"
+          }
+        },
+        "required": [
+          "inputs"
+        ]
       }
     },
     {
@@ -240,16 +481,25 @@
       "summary": "Get the mute state of an input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of input to get the mute state of",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "inputMuted": {
+            "type": "boolean",
+            "description": "Whether the input is muted"
+          }
+        },
+        "required": [
+          "inputMuted"
+        ]
       }
     },
     {
@@ -257,24 +507,25 @@
       "summary": "Mute or unmute an input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the input to set the mute state of",
           "required": true
         },
         {
-          "name": "muted",
+          "name": "inputMuted",
           "schema": {
             "type": "boolean"
           },
-          "summary": "Mute state",
+          "summary": "Whether to mute the input or not",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -282,16 +533,25 @@
       "summary": "Toggle the mute state of an input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the input to toggle the mute state of",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "inputMuted": {
+            "type": "boolean",
+            "description": "Whether the input has been muted or unmuted"
+          }
+        },
+        "required": [
+          "inputMuted"
+        ]
       }
     },
     {
@@ -299,75 +559,145 @@
       "summary": "Get the volume of an input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the input to get the volume of",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "inputVolumeMul": {
+            "type": "number",
+            "description": "Volume setting in mul"
+          },
+          "inputVolumeDb": {
+            "type": "number",
+            "description": "Volume setting in dB"
+          }
+        },
+        "required": [
+          "inputVolumeMul",
+          "inputVolumeDb"
+        ]
       }
     },
     {
       "name": "input.set_volume",
-      "summary": "Set the volume of an input (dB or multiplier)",
+      "summary": "Set the volume of an input (one of inputVolumeDb / inputVolumeMul is required)",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the input to set the volume of",
           "required": true
         },
         {
-          "name": "volume_db",
+          "name": "inputVolumeDb",
           "schema": {
             "type": "number"
           },
-          "summary": "Volume in dB"
+          "summary": "Volume setting in dB"
         },
         {
-          "name": "volume_mul",
+          "name": "inputVolumeMul",
           "schema": {
             "type": "number"
           },
-          "summary": "Volume multiplier"
+          "summary": "Volume setting in mul"
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "stream.get_status",
       "summary": "Get stream output status",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          },
+          "outputReconnecting": {
+            "type": "boolean",
+            "description": "Whether the output is currently reconnecting"
+          },
+          "outputTimecode": {
+            "type": "string",
+            "description": "Current formatted timecode string for the output"
+          },
+          "outputDuration": {
+            "type": "number",
+            "description": "Current duration in milliseconds for the output"
+          },
+          "outputCongestion": {
+            "type": "number",
+            "description": "Congestion of the output"
+          },
+          "outputBytes": {
+            "type": "number",
+            "description": "Number of bytes sent by the output"
+          },
+          "outputSkippedFrames": {
+            "type": "number",
+            "description": "Number of frames skipped by the output's process"
+          },
+          "outputTotalFrames": {
+            "type": "number",
+            "description": "Total number of frames delivered by the output's process"
+          }
+        },
+        "required": [
+          "outputActive",
+          "outputReconnecting",
+          "outputTimecode",
+          "outputDuration",
+          "outputCongestion",
+          "outputBytes",
+          "outputSkippedFrames",
+          "outputTotalFrames"
+        ]
       }
     },
     {
       "name": "stream.start",
       "summary": "Start streaming",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "stream.stop",
       "summary": "Stop streaming",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "stream.toggle",
       "summary": "Toggle streaming",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "New state of the stream output"
+          }
+        },
+        "required": [
+          "outputActive"
+        ]
       }
     },
     {
@@ -375,7 +705,7 @@
       "summary": "Send a caption on the stream",
       "params": [
         {
-          "name": "caption",
+          "name": "captionText",
           "schema": {
             "type": "string"
           },
@@ -384,91 +714,164 @@
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "record.get_status",
       "summary": "Get record output status",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          },
+          "outputPaused": {
+            "type": "boolean",
+            "description": "Whether the output is paused"
+          },
+          "outputTimecode": {
+            "type": "string",
+            "description": "Current formatted timecode string for the output"
+          },
+          "outputDuration": {
+            "type": "number",
+            "description": "Current duration in milliseconds for the output"
+          },
+          "outputBytes": {
+            "type": "number",
+            "description": "Number of bytes sent by the output"
+          }
+        },
+        "required": [
+          "outputActive",
+          "outputPaused",
+          "outputTimecode",
+          "outputDuration",
+          "outputBytes"
+        ]
       }
     },
     {
       "name": "record.start",
       "summary": "Start recording",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "record.stop",
       "summary": "Stop recording",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputPath": {
+            "type": "string",
+            "description": "File name for the saved recording"
+          }
+        },
+        "required": [
+          "outputPath"
+        ]
       }
     },
     {
       "name": "record.toggle",
       "summary": "Toggle recording",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "The new active state of the output"
+          }
+        },
+        "required": [
+          "outputActive"
+        ]
       }
     },
     {
       "name": "record.pause",
       "summary": "Pause recording",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "record.resume",
       "summary": "Resume recording",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "record.toggle_pause",
       "summary": "Toggle record pause",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "replay_buffer.get_status",
       "summary": "Get replay buffer status",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          }
+        },
+        "required": [
+          "outputActive"
+        ]
       }
     },
     {
       "name": "replay_buffer.start",
       "summary": "Start the replay buffer",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "replay_buffer.stop",
       "summary": "Stop the replay buffer",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "replay_buffer.toggle",
       "summary": "Toggle the replay buffer",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          }
+        },
+        "required": [
+          "outputActive"
+        ]
       }
     },
     {
       "name": "replay_buffer.save",
       "summary": "Save the replay buffer to disk",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -476,16 +879,35 @@
       "summary": "Get the status of a media input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "mediaState": {
+            "type": "string",
+            "description": "State of the media input"
+          },
+          "mediaDuration": {
+            "type": "number",
+            "description": "Total duration of the playing media in milliseconds. `null` if not playing"
+          },
+          "mediaCursor": {
+            "type": "number",
+            "description": "Position of the cursor in milliseconds. `null` if not playing"
+          }
+        },
+        "required": [
+          "mediaState",
+          "mediaDuration",
+          "mediaCursor"
+        ]
       }
     },
     {
@@ -493,16 +915,17 @@
       "summary": "Play a media input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -510,16 +933,17 @@
       "summary": "Pause a media input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -527,16 +951,17 @@
       "summary": "Restart a media input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -544,16 +969,17 @@
       "summary": "Stop a media input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -561,16 +987,17 @@
       "summary": "Next track on a media input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -578,16 +1005,17 @@
       "summary": "Previous track on a media input",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -595,38 +1023,105 @@
       "summary": "Seek a media input (milliseconds)",
       "params": [
         {
-          "name": "input",
+          "name": "inputName",
           "schema": {
             "type": "string"
           },
-          "summary": "Input name",
+          "summary": "Name of the media input",
           "required": true
         },
         {
-          "name": "time",
+          "name": "mediaCursor",
           "schema": {
             "type": "number"
           },
-          "summary": "Cursor position in ms",
+          "summary": "New cursor position to set",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "transition.list",
       "summary": "List scene transitions",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "currentSceneTransitionName": {
+            "type": "string",
+            "description": "Name of the current scene transition. Can be null"
+          },
+          "currentSceneTransitionUuid": {
+            "type": "string",
+            "description": "UUID of the current scene transition. Can be null"
+          },
+          "currentSceneTransitionKind": {
+            "type": "string",
+            "description": "Kind of the current scene transition. Can be null"
+          },
+          "transitions": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Array of transitions"
+          }
+        },
+        "required": [
+          "currentSceneTransitionName",
+          "currentSceneTransitionUuid",
+          "currentSceneTransitionKind",
+          "transitions"
+        ]
       }
     },
     {
       "name": "transition.get_current",
       "summary": "Get the current scene transition",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "transitionName": {
+            "type": "string",
+            "description": "Name of the transition"
+          },
+          "transitionUuid": {
+            "type": "string",
+            "description": "UUID of the transition"
+          },
+          "transitionKind": {
+            "type": "string",
+            "description": "Kind of the transition"
+          },
+          "transitionFixed": {
+            "type": "boolean",
+            "description": "Whether the transition uses a fixed (unconfigurable) duration"
+          },
+          "transitionDuration": {
+            "type": "number",
+            "description": "Configured transition duration in milliseconds. `null` if transition is fixed"
+          },
+          "transitionConfigurable": {
+            "type": "boolean",
+            "description": "Whether the transition supports being configured"
+          },
+          "transitionSettings": {
+            "type": "object",
+            "description": "Object of settings for the transition. `null` if transition is not configurable"
+          }
+        },
+        "required": [
+          "transitionName",
+          "transitionUuid",
+          "transitionKind",
+          "transitionFixed",
+          "transitionDuration",
+          "transitionConfigurable",
+          "transitionSettings"
+        ]
       }
     },
     {
@@ -634,16 +1129,17 @@
       "summary": "Set the current scene transition",
       "params": [
         {
-          "name": "transition",
+          "name": "transitionName",
           "schema": {
             "type": "string"
           },
-          "summary": "Transition name",
+          "summary": "Name of the transition to make active",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -651,23 +1147,25 @@
       "summary": "Set the transition duration (milliseconds)",
       "params": [
         {
-          "name": "duration",
+          "name": "transitionDuration",
           "schema": {
             "type": "number"
           },
-          "summary": "Duration in ms",
+          "summary": "Duration in milliseconds",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "transition.trigger",
       "summary": "Trigger the current studio mode transition",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
@@ -675,16 +1173,28 @@
       "summary": "List filters of a source",
       "params": [
         {
-          "name": "source",
+          "name": "sourceName",
           "schema": {
             "type": "string"
           },
-          "summary": "Source name",
+          "summary": "Name of the source",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "description": "Array of filters"
+          }
+        },
+        "required": [
+          "filters"
+        ]
       }
     },
     {
@@ -692,60 +1202,81 @@
       "summary": "Enable or disable a source filter",
       "params": [
         {
-          "name": "source",
+          "name": "sourceName",
           "schema": {
             "type": "string"
           },
-          "summary": "Source name",
+          "summary": "Name of the source the filter is on",
           "required": true
         },
         {
-          "name": "filter",
+          "name": "filterName",
           "schema": {
             "type": "string"
           },
-          "summary": "Filter name",
+          "summary": "Name of the filter",
           "required": true
         },
         {
-          "name": "enabled",
+          "name": "filterEnabled",
           "schema": {
             "type": "boolean"
           },
-          "summary": "Enable state",
+          "summary": "New enable state of the filter",
           "required": true
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "virtual_cam.get_status",
       "summary": "Get virtual camera status",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          }
+        },
+        "required": [
+          "outputActive"
+        ]
       }
     },
     {
       "name": "virtual_cam.start",
       "summary": "Start the virtual camera",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "virtual_cam.stop",
       "summary": "Stop the virtual camera",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     },
     {
       "name": "virtual_cam.toggle",
       "summary": "Toggle the virtual camera",
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "outputActive": {
+            "type": "boolean",
+            "description": "Whether the output is active"
+          }
+        },
+        "required": [
+          "outputActive"
+        ]
       }
     },
     {
@@ -753,37 +1284,46 @@
       "summary": "Screenshot a source (returns base64 imageData)",
       "params": [
         {
-          "name": "source",
+          "name": "sourceName",
           "schema": {
             "type": "string"
           },
-          "summary": "Source name",
+          "summary": "Name of the source to take a screenshot of",
           "required": true
         },
         {
-          "name": "format",
+          "name": "imageFormat",
           "schema": {
             "type": "string"
           },
-          "summary": "Image format (png, jpg...)"
+          "summary": "Image compression format to use. Use `GetVersion` to get compatible image formats"
         },
         {
-          "name": "width",
+          "name": "imageWidth",
           "schema": {
             "type": "number"
           },
-          "summary": "Image width"
+          "summary": "Width to scale the screenshot to"
         },
         {
-          "name": "height",
+          "name": "imageHeight",
           "schema": {
             "type": "number"
           },
-          "summary": "Image height"
+          "summary": "Height to scale the screenshot to"
         }
       ],
       "result": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "imageData": {
+            "type": "string",
+            "description": "Base64-encoded screenshot"
+          }
+        },
+        "required": [
+          "imageData"
+        ]
       }
     },
     {
@@ -818,15 +1358,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "scene_name": {
+          "sceneName": {
             "type": "string",
             "description": "Name of the scene that was switched to"
           },
-          "scene_uuid": {
+          "sceneUuid": {
             "type": "string",
             "description": "UUID of the scene that was switched to"
           }
-        }
+        },
+        "required": [
+          "sceneName",
+          "sceneUuid"
+        ]
       }
     },
     {
@@ -835,15 +1379,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "scene_name": {
+          "sceneName": {
             "type": "string",
             "description": "Name of the scene that was switched to"
           },
-          "scene_uuid": {
+          "sceneUuid": {
             "type": "string",
             "description": "UUID of the scene that was switched to"
           }
-        }
+        },
+        "required": [
+          "sceneName",
+          "sceneUuid"
+        ]
       }
     },
     {
@@ -854,26 +1402,15 @@
         "properties": {
           "scenes": {
             "type": "array",
-            "description": "Updated array of scenes",
             "items": {
-              "type": "object",
-              "properties": {
-                "scene_index": {
-                  "type": "integer",
-                  "description": "Index of the scene in the list"
-                },
-                "scene_name": {
-                  "type": "string",
-                  "description": "Name of the scene"
-                },
-                "scene_uuid": {
-                  "type": "string",
-                  "description": "UUID of the scene"
-                }
-              }
-            }
+              "type": "object"
+            },
+            "description": "Updated array of scenes"
           }
-        }
+        },
+        "required": [
+          "scenes"
+        ]
       }
     },
     {
@@ -882,19 +1419,24 @@
       "payload": {
         "type": "object",
         "properties": {
-          "scene_name": {
+          "sceneName": {
             "type": "string",
             "description": "Name of the new scene"
           },
-          "scene_uuid": {
+          "sceneUuid": {
             "type": "string",
             "description": "UUID of the new scene"
           },
-          "is_group": {
+          "isGroup": {
             "type": "boolean",
             "description": "Whether the new scene is a group"
           }
-        }
+        },
+        "required": [
+          "sceneName",
+          "sceneUuid",
+          "isGroup"
+        ]
       }
     },
     {
@@ -903,19 +1445,24 @@
       "payload": {
         "type": "object",
         "properties": {
-          "scene_name": {
+          "sceneName": {
             "type": "string",
             "description": "Name of the removed scene"
           },
-          "scene_uuid": {
+          "sceneUuid": {
             "type": "string",
             "description": "UUID of the removed scene"
           },
-          "is_group": {
+          "isGroup": {
             "type": "boolean",
             "description": "Whether the scene was a group"
           }
-        }
+        },
+        "required": [
+          "sceneName",
+          "sceneUuid",
+          "isGroup"
+        ]
       }
     },
     {
@@ -924,19 +1471,24 @@
       "payload": {
         "type": "object",
         "properties": {
-          "scene_uuid": {
+          "sceneUuid": {
             "type": "string",
             "description": "UUID of the scene"
           },
-          "old_scene_name": {
+          "oldSceneName": {
             "type": "string",
             "description": "Old name of the scene"
           },
-          "scene_name": {
+          "sceneName": {
             "type": "string",
             "description": "New name of the scene"
           }
-        }
+        },
+        "required": [
+          "sceneUuid",
+          "oldSceneName",
+          "sceneName"
+        ]
       }
     },
     {
@@ -945,23 +1497,29 @@
       "payload": {
         "type": "object",
         "properties": {
-          "scene_name": {
+          "sceneName": {
             "type": "string",
             "description": "Name of the scene the item is in"
           },
-          "scene_uuid": {
+          "sceneUuid": {
             "type": "string",
             "description": "UUID of the scene the item is in"
           },
-          "scene_item_id": {
-            "type": "integer",
+          "sceneItemId": {
+            "type": "number",
             "description": "Numeric ID of the scene item"
           },
-          "scene_item_enabled": {
+          "sceneItemEnabled": {
             "type": "boolean",
             "description": "Whether the scene item is enabled (visible)"
           }
-        }
+        },
+        "required": [
+          "sceneName",
+          "sceneUuid",
+          "sceneItemId",
+          "sceneItemEnabled"
+        ]
       }
     },
     {
@@ -970,19 +1528,24 @@
       "payload": {
         "type": "object",
         "properties": {
-          "input_name": {
+          "inputName": {
             "type": "string",
             "description": "Name of the input"
           },
-          "input_uuid": {
+          "inputUuid": {
             "type": "string",
             "description": "UUID of the input"
           },
-          "input_muted": {
+          "inputMuted": {
             "type": "boolean",
             "description": "Whether the input is muted"
           }
-        }
+        },
+        "required": [
+          "inputName",
+          "inputUuid",
+          "inputMuted"
+        ]
       }
     },
     {
@@ -991,23 +1554,29 @@
       "payload": {
         "type": "object",
         "properties": {
-          "input_name": {
+          "inputName": {
             "type": "string",
             "description": "Name of the input"
           },
-          "input_uuid": {
+          "inputUuid": {
             "type": "string",
             "description": "UUID of the input"
           },
-          "input_volume_mul": {
+          "inputVolumeMul": {
             "type": "number",
             "description": "New volume level multiplier"
           },
-          "input_volume_db": {
+          "inputVolumeDb": {
             "type": "number",
             "description": "New volume level in dB"
           }
-        }
+        },
+        "required": [
+          "inputName",
+          "inputUuid",
+          "inputVolumeMul",
+          "inputVolumeDb"
+        ]
       }
     },
     {
@@ -1016,35 +1585,44 @@
       "payload": {
         "type": "object",
         "properties": {
-          "input_name": {
+          "inputName": {
             "type": "string",
             "description": "Name of the input"
           },
-          "input_uuid": {
+          "inputUuid": {
             "type": "string",
             "description": "UUID of the input"
           },
-          "input_kind": {
+          "inputKind": {
             "type": "string",
             "description": "The kind of the input"
           },
-          "unversioned_input_kind": {
+          "unversionedInputKind": {
             "type": "string",
             "description": "The unversioned kind of input (aka no `_v2` stuff)"
           },
-          "input_kind_caps": {
-            "type": "integer",
-            "description": "Bitflag value for the caps that an input supports"
+          "inputKindCaps": {
+            "type": "number",
+            "description": "Bitflag value for the caps that an input supports. See obs_source_info.output_flags in the libobs docs"
           },
-          "input_settings": {
+          "inputSettings": {
             "type": "object",
             "description": "The settings configured to the input when it was created"
           },
-          "default_input_settings": {
+          "defaultInputSettings": {
             "type": "object",
             "description": "The default settings for the input"
           }
-        }
+        },
+        "required": [
+          "inputName",
+          "inputUuid",
+          "inputKind",
+          "unversionedInputKind",
+          "inputKindCaps",
+          "inputSettings",
+          "defaultInputSettings"
+        ]
       }
     },
     {
@@ -1053,15 +1631,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "input_name": {
+          "inputName": {
             "type": "string",
             "description": "Name of the input"
           },
-          "input_uuid": {
+          "inputUuid": {
             "type": "string",
             "description": "UUID of the input"
           }
-        }
+        },
+        "required": [
+          "inputName",
+          "inputUuid"
+        ]
       }
     },
     {
@@ -1070,19 +1652,24 @@
       "payload": {
         "type": "object",
         "properties": {
-          "input_uuid": {
+          "inputUuid": {
             "type": "string",
             "description": "UUID of the input"
           },
-          "old_input_name": {
+          "oldInputName": {
             "type": "string",
             "description": "Old name of the input"
           },
-          "input_name": {
+          "inputName": {
             "type": "string",
             "description": "New name of the input"
           }
-        }
+        },
+        "required": [
+          "inputUuid",
+          "oldInputName",
+          "inputName"
+        ]
       }
     },
     {
@@ -1091,15 +1678,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "output_active": {
+          "outputActive": {
             "type": "boolean",
             "description": "Whether the output is active"
           },
-          "output_state": {
+          "outputState": {
             "type": "string",
-            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+            "description": "The specific state of the output"
           }
-        }
+        },
+        "required": [
+          "outputActive",
+          "outputState"
+        ]
       }
     },
     {
@@ -1108,22 +1699,24 @@
       "payload": {
         "type": "object",
         "properties": {
-          "output_active": {
+          "outputActive": {
             "type": "boolean",
             "description": "Whether the output is active"
           },
-          "output_state": {
+          "outputState": {
             "type": "string",
-            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+            "description": "The specific state of the output"
           },
-          "output_path": {
-            "type": [
-              "string",
-              "null"
-            ],
+          "outputPath": {
+            "type": "string",
             "description": "File name for the saved recording, if record stopped. `null` otherwise"
           }
-        }
+        },
+        "required": [
+          "outputActive",
+          "outputState",
+          "outputPath"
+        ]
       }
     },
     {
@@ -1132,15 +1725,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "output_active": {
+          "outputActive": {
             "type": "boolean",
             "description": "Whether the output is active"
           },
-          "output_state": {
+          "outputState": {
             "type": "string",
-            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+            "description": "The specific state of the output"
           }
-        }
+        },
+        "required": [
+          "outputActive",
+          "outputState"
+        ]
       }
     },
     {
@@ -1149,15 +1746,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "transition_name": {
+          "transitionName": {
             "type": "string",
             "description": "Name of the new transition"
           },
-          "transition_uuid": {
+          "transitionUuid": {
             "type": "string",
             "description": "UUID of the new transition"
           }
-        }
+        },
+        "required": [
+          "transitionName",
+          "transitionUuid"
+        ]
       }
     },
     {
@@ -1166,15 +1767,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "transition_name": {
+          "transitionName": {
             "type": "string",
             "description": "Scene transition name"
           },
-          "transition_uuid": {
+          "transitionUuid": {
             "type": "string",
             "description": "Scene transition UUID"
           }
-        }
+        },
+        "required": [
+          "transitionName",
+          "transitionUuid"
+        ]
       }
     },
     {
@@ -1183,15 +1788,19 @@
       "payload": {
         "type": "object",
         "properties": {
-          "transition_name": {
+          "transitionName": {
             "type": "string",
             "description": "Scene transition name"
           },
-          "transition_uuid": {
+          "transitionUuid": {
             "type": "string",
             "description": "Scene transition UUID"
           }
-        }
+        },
+        "required": [
+          "transitionName",
+          "transitionUuid"
+        ]
       }
     },
     {
@@ -1200,19 +1809,24 @@
       "payload": {
         "type": "object",
         "properties": {
-          "source_name": {
+          "sourceName": {
             "type": "string",
             "description": "Name of the source the filter is on"
           },
-          "filter_name": {
+          "filterName": {
             "type": "string",
             "description": "Name of the filter"
           },
-          "filter_enabled": {
+          "filterEnabled": {
             "type": "boolean",
             "description": "Whether the filter is enabled"
           }
-        }
+        },
+        "required": [
+          "sourceName",
+          "filterName",
+          "filterEnabled"
+        ]
       }
     },
     {
@@ -1221,11 +1835,14 @@
       "payload": {
         "type": "object",
         "properties": {
-          "studio_mode_enabled": {
+          "studioModeEnabled": {
             "type": "boolean",
-            "description": "Whether studio mode is enabled"
+            "description": "True == Enabled, False == Disabled"
           }
-        }
+        },
+        "required": [
+          "studioModeEnabled"
+        ]
       }
     },
     {
@@ -1234,22 +1851,27 @@
       "payload": {
         "type": "object",
         "properties": {
-          "output_active": {
+          "outputActive": {
             "type": "boolean",
             "description": "Whether the output is active"
           },
-          "output_state": {
+          "outputState": {
             "type": "string",
-            "description": "The specific state of the output (OBS_WEBSOCKET_OUTPUT_*)"
+            "description": "The specific state of the output"
           }
-        }
+        },
+        "required": [
+          "outputActive",
+          "outputState"
+        ]
       }
     },
     {
       "name": "exit.started",
       "summary": "OBS is shutting down",
       "payload": {
-        "type": "object"
+        "type": "object",
+        "properties": {}
       }
     }
   ]

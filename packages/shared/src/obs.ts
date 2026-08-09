@@ -1,8 +1,8 @@
 // ── OBS events exposed on the Rawtoh hub ────────────────────────────
 // Maps the Rawtoh RPC event name (snake_case, emitted to the hub) to the
 // obs-websocket v5 event name the browser agent subscribes to.
-// The browser forwards obs-websocket payloads unchanged (camelCase); the
-// backend converts keys to snake_case before emitting to the hub.
+// Only the event name is renamed: payloads reach the hub unchanged, so
+// their fields keep the obs-websocket camelCase names.
 
 export const OBS_EVENTS: Record<string, string> = {
   "scene.current_changed": "CurrentProgramSceneChanged",
