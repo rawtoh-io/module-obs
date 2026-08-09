@@ -1,122 +1,137 @@
 {
+  "openrpc": "1.3.2",
+  "info": {
+    "title": "OBS",
+    "version": "0.1.0"
+  },
   "methods": [
     {
       "name": "general.get_version",
       "summary": "Get OBS and obs-websocket version info",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "obsVersion": {
-            "type": "string",
-            "description": "Current OBS Studio version"
-          },
-          "obsWebSocketVersion": {
-            "type": "string",
-            "description": "Current obs-websocket version"
-          },
-          "rpcVersion": {
-            "type": "number",
-            "description": "Current latest obs-websocket RPC version"
-          },
-          "availableRequests": {
-            "type": "array",
-            "items": {
-              "type": "string"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "obsVersion": {
+              "type": "string",
+              "description": "Current OBS Studio version"
             },
-            "description": "Array of available RPC requests for the currently negotiated RPC version"
-          },
-          "supportedImageFormats": {
-            "type": "array",
-            "items": {
-              "type": "string"
+            "obsWebSocketVersion": {
+              "type": "string",
+              "description": "Current obs-websocket version"
             },
-            "description": "Image formats available in `GetSourceScreenshot` and `SaveSourceScreenshot` requests."
+            "rpcVersion": {
+              "type": "number",
+              "description": "Current latest obs-websocket RPC version"
+            },
+            "availableRequests": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Array of available RPC requests for the currently negotiated RPC version"
+            },
+            "supportedImageFormats": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Image formats available in `GetSourceScreenshot` and `SaveSourceScreenshot` requests."
+            },
+            "platform": {
+              "type": "string",
+              "description": "Name of the platform. Usually `windows`, `macos`, or `ubuntu` (linux flavor). Not guaranteed to be any of those"
+            },
+            "platformDescription": {
+              "type": "string",
+              "description": "Description of the platform, like `Windows 10 (10.0)`"
+            }
           },
-          "platform": {
-            "type": "string",
-            "description": "Name of the platform. Usually `windows`, `macos`, or `ubuntu` (linux flavor). Not guaranteed to be any of those"
-          },
-          "platformDescription": {
-            "type": "string",
-            "description": "Description of the platform, like `Windows 10 (10.0)`"
-          }
-        },
-        "required": [
-          "obsVersion",
-          "obsWebSocketVersion",
-          "rpcVersion",
-          "availableRequests",
-          "supportedImageFormats",
-          "platform",
-          "platformDescription"
-        ]
-      }
+          "required": [
+            "obsVersion",
+            "obsWebSocketVersion",
+            "rpcVersion",
+            "availableRequests",
+            "supportedImageFormats",
+            "platform",
+            "platformDescription"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "general.get_stats",
       "summary": "Get OBS performance statistics",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "cpuUsage": {
-            "type": "number",
-            "description": "Current CPU usage in percent"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "cpuUsage": {
+              "type": "number",
+              "description": "Current CPU usage in percent"
+            },
+            "memoryUsage": {
+              "type": "number",
+              "description": "Amount of memory in MB currently being used by OBS"
+            },
+            "availableDiskSpace": {
+              "type": "number",
+              "description": "Available disk space on the device being used for recording storage"
+            },
+            "activeFps": {
+              "type": "number",
+              "description": "Current FPS being rendered"
+            },
+            "averageFrameRenderTime": {
+              "type": "number",
+              "description": "Average time in milliseconds that OBS is taking to render a frame"
+            },
+            "renderSkippedFrames": {
+              "type": "number",
+              "description": "Number of frames skipped by OBS in the render thread"
+            },
+            "renderTotalFrames": {
+              "type": "number",
+              "description": "Total number of frames outputted by the render thread"
+            },
+            "outputSkippedFrames": {
+              "type": "number",
+              "description": "Number of frames skipped by OBS in the output thread"
+            },
+            "outputTotalFrames": {
+              "type": "number",
+              "description": "Total number of frames outputted by the output thread"
+            },
+            "webSocketSessionIncomingMessages": {
+              "type": "number",
+              "description": "Total number of messages received by obs-websocket from the client"
+            },
+            "webSocketSessionOutgoingMessages": {
+              "type": "number",
+              "description": "Total number of messages sent by obs-websocket to the client"
+            }
           },
-          "memoryUsage": {
-            "type": "number",
-            "description": "Amount of memory in MB currently being used by OBS"
-          },
-          "availableDiskSpace": {
-            "type": "number",
-            "description": "Available disk space on the device being used for recording storage"
-          },
-          "activeFps": {
-            "type": "number",
-            "description": "Current FPS being rendered"
-          },
-          "averageFrameRenderTime": {
-            "type": "number",
-            "description": "Average time in milliseconds that OBS is taking to render a frame"
-          },
-          "renderSkippedFrames": {
-            "type": "number",
-            "description": "Number of frames skipped by OBS in the render thread"
-          },
-          "renderTotalFrames": {
-            "type": "number",
-            "description": "Total number of frames outputted by the render thread"
-          },
-          "outputSkippedFrames": {
-            "type": "number",
-            "description": "Number of frames skipped by OBS in the output thread"
-          },
-          "outputTotalFrames": {
-            "type": "number",
-            "description": "Total number of frames outputted by the output thread"
-          },
-          "webSocketSessionIncomingMessages": {
-            "type": "number",
-            "description": "Total number of messages received by obs-websocket from the client"
-          },
-          "webSocketSessionOutgoingMessages": {
-            "type": "number",
-            "description": "Total number of messages sent by obs-websocket to the client"
-          }
-        },
-        "required": [
-          "cpuUsage",
-          "memoryUsage",
-          "availableDiskSpace",
-          "activeFps",
-          "averageFrameRenderTime",
-          "renderSkippedFrames",
-          "renderTotalFrames",
-          "outputSkippedFrames",
-          "outputTotalFrames",
-          "webSocketSessionIncomingMessages",
-          "webSocketSessionOutgoingMessages"
-        ]
-      }
+          "required": [
+            "cpuUsage",
+            "memoryUsage",
+            "availableDiskSpace",
+            "activeFps",
+            "averageFrameRenderTime",
+            "renderSkippedFrames",
+            "renderTotalFrames",
+            "outputSkippedFrames",
+            "outputTotalFrames",
+            "webSocketSessionIncomingMessages",
+            "webSocketSessionOutgoingMessages"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "general.trigger_hotkey",
@@ -124,33 +139,42 @@
       "params": [
         {
           "name": "hotkeyName",
+          "summary": "Name of the hotkey to trigger",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the hotkey to trigger",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "studio.get_mode",
       "summary": "Check if studio mode is enabled",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "studioModeEnabled": {
-            "type": "boolean",
-            "description": "Whether studio mode is enabled"
-          }
-        },
-        "required": [
-          "studioModeEnabled"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "studioModeEnabled": {
+              "type": "boolean",
+              "description": "Whether studio mode is enabled"
+            }
+          },
+          "required": [
+            "studioModeEnabled"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "studio.set_mode",
@@ -158,87 +182,101 @@
       "params": [
         {
           "name": "studioModeEnabled",
+          "summary": "True == Enabled, False == Disabled",
+          "required": true,
           "schema": {
             "type": "boolean"
-          },
-          "summary": "True == Enabled, False == Disabled",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene.list",
       "summary": "List all scenes (current program/preview included)",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "currentProgramSceneName": {
-            "type": "string",
-            "description": "Current program scene name. Can be `null` if non-main canvas or internal state desync"
-          },
-          "currentProgramSceneUuid": {
-            "type": "string",
-            "description": "Current program scene UUID. Can be `null` if non-main canvas or internal state desync"
-          },
-          "currentPreviewSceneName": {
-            "type": "string",
-            "description": "Current preview scene name. `null` if not in studio mode or non-main canvas"
-          },
-          "currentPreviewSceneUuid": {
-            "type": "string",
-            "description": "Current preview scene UUID. `null` if not in studio mode or non-main canvas"
-          },
-          "scenes": {
-            "type": "array",
-            "items": {
-              "type": "object"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "currentProgramSceneName": {
+              "type": "string",
+              "description": "Current program scene name. Can be `null` if non-main canvas or internal state desync"
             },
-            "description": "Array of scenes"
-          }
-        },
-        "required": [
-          "currentProgramSceneName",
-          "currentProgramSceneUuid",
-          "currentPreviewSceneName",
-          "currentPreviewSceneUuid",
-          "scenes"
-        ]
-      }
+            "currentProgramSceneUuid": {
+              "type": "string",
+              "description": "Current program scene UUID. Can be `null` if non-main canvas or internal state desync"
+            },
+            "currentPreviewSceneName": {
+              "type": "string",
+              "description": "Current preview scene name. `null` if not in studio mode or non-main canvas"
+            },
+            "currentPreviewSceneUuid": {
+              "type": "string",
+              "description": "Current preview scene UUID. `null` if not in studio mode or non-main canvas"
+            },
+            "scenes": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Array of scenes"
+            }
+          },
+          "required": [
+            "currentProgramSceneName",
+            "currentProgramSceneUuid",
+            "currentPreviewSceneName",
+            "currentPreviewSceneUuid",
+            "scenes"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene.get_current",
       "summary": "Get the current program scene",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "sceneName": {
-            "type": "string",
-            "description": "Current program scene name"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sceneName": {
+              "type": "string",
+              "description": "Current program scene name"
+            },
+            "sceneUuid": {
+              "type": "string",
+              "description": "Current program scene UUID"
+            },
+            "currentProgramSceneName": {
+              "type": "string",
+              "description": "Current program scene name (Deprecated)"
+            },
+            "currentProgramSceneUuid": {
+              "type": "string",
+              "description": "Current program scene UUID (Deprecated)"
+            }
           },
-          "sceneUuid": {
-            "type": "string",
-            "description": "Current program scene UUID"
-          },
-          "currentProgramSceneName": {
-            "type": "string",
-            "description": "Current program scene name (Deprecated)"
-          },
-          "currentProgramSceneUuid": {
-            "type": "string",
-            "description": "Current program scene UUID (Deprecated)"
-          }
-        },
-        "required": [
-          "sceneName",
-          "sceneUuid",
-          "currentProgramSceneName",
-          "currentProgramSceneUuid"
-        ]
-      }
+          "required": [
+            "sceneName",
+            "sceneUuid",
+            "currentProgramSceneName",
+            "currentProgramSceneUuid"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene.set_current",
@@ -246,48 +284,57 @@
       "params": [
         {
           "name": "sceneName",
+          "summary": "Scene name to set as the current program scene",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Scene name to set as the current program scene",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene.get_preview",
       "summary": "Get the current preview scene (studio mode)",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "sceneName": {
-            "type": "string",
-            "description": "Current preview scene name"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sceneName": {
+              "type": "string",
+              "description": "Current preview scene name"
+            },
+            "sceneUuid": {
+              "type": "string",
+              "description": "Current preview scene UUID"
+            },
+            "currentPreviewSceneName": {
+              "type": "string",
+              "description": "Current preview scene name"
+            },
+            "currentPreviewSceneUuid": {
+              "type": "string",
+              "description": "Current preview scene UUID"
+            }
           },
-          "sceneUuid": {
-            "type": "string",
-            "description": "Current preview scene UUID"
-          },
-          "currentPreviewSceneName": {
-            "type": "string",
-            "description": "Current preview scene name"
-          },
-          "currentPreviewSceneUuid": {
-            "type": "string",
-            "description": "Current preview scene UUID"
-          }
-        },
-        "required": [
-          "sceneName",
-          "sceneUuid",
-          "currentPreviewSceneName",
-          "currentPreviewSceneUuid"
-        ]
-      }
+          "required": [
+            "sceneName",
+            "sceneUuid",
+            "currentPreviewSceneName",
+            "currentPreviewSceneUuid"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene.set_preview",
@@ -295,17 +342,21 @@
       "params": [
         {
           "name": "sceneName",
+          "summary": "Scene name to set as the current preview scene",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Scene name to set as the current preview scene",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene.create",
@@ -313,25 +364,29 @@
       "params": [
         {
           "name": "sceneName",
+          "summary": "Name for the new scene",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name for the new scene",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "sceneUuid": {
-            "type": "string",
-            "description": "UUID of the created scene"
-          }
-        },
-        "required": [
-          "sceneUuid"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sceneUuid": {
+              "type": "string",
+              "description": "UUID of the created scene"
+            }
+          },
+          "required": [
+            "sceneUuid"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene.remove",
@@ -339,17 +394,21 @@
       "params": [
         {
           "name": "sceneName",
+          "summary": "Name of the scene to remove",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the scene to remove",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene_item.list",
@@ -357,28 +416,32 @@
       "params": [
         {
           "name": "sceneName",
+          "summary": "Name of the scene to get the items of",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the scene to get the items of",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "sceneItems": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            },
-            "description": "Array of scene items in the scene"
-          }
-        },
-        "required": [
-          "sceneItems"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sceneItems": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Array of scene items in the scene"
+            }
+          },
+          "required": [
+            "sceneItems"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene_item.get_enabled",
@@ -386,33 +449,37 @@
       "params": [
         {
           "name": "sceneName",
+          "summary": "Name of the scene the item is in",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the scene the item is in",
-          "required": true
+          }
         },
         {
           "name": "sceneItemId",
+          "summary": "Numeric ID of the scene item",
+          "required": true,
           "schema": {
             "type": "number"
-          },
-          "summary": "Numeric ID of the scene item",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "sceneItemEnabled": {
-            "type": "boolean",
-            "description": "Whether the scene item is enabled. `true` for enabled, `false` for disabled"
-          }
-        },
-        "required": [
-          "sceneItemEnabled"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sceneItemEnabled": {
+              "type": "boolean",
+              "description": "Whether the scene item is enabled. `true` for enabled, `false` for disabled"
+            }
+          },
+          "required": [
+            "sceneItemEnabled"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "scene_item.set_enabled",
@@ -420,33 +487,37 @@
       "params": [
         {
           "name": "sceneName",
+          "summary": "Name of the scene the item is in",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the scene the item is in",
-          "required": true
+          }
         },
         {
           "name": "sceneItemId",
+          "summary": "Numeric ID of the scene item",
+          "required": true,
           "schema": {
             "type": "number"
-          },
-          "summary": "Numeric ID of the scene item",
-          "required": true
+          }
         },
         {
           "name": "sceneItemEnabled",
+          "summary": "New enable state of the scene item",
+          "required": true,
           "schema": {
             "type": "boolean"
-          },
-          "summary": "New enable state of the scene item",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "input.list",
@@ -454,27 +525,31 @@
       "params": [
         {
           "name": "inputKind",
+          "summary": "Restrict the array to only inputs of the specified kind",
           "schema": {
             "type": "string"
-          },
-          "summary": "Restrict the array to only inputs of the specified kind"
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "inputs": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            },
-            "description": "Array of inputs"
-          }
-        },
-        "required": [
-          "inputs"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inputs": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Array of inputs"
+            }
+          },
+          "required": [
+            "inputs"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "input.get_mute",
@@ -482,25 +557,29 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of input to get the mute state of",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of input to get the mute state of",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "inputMuted": {
-            "type": "boolean",
-            "description": "Whether the input is muted"
-          }
-        },
-        "required": [
-          "inputMuted"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inputMuted": {
+              "type": "boolean",
+              "description": "Whether the input is muted"
+            }
+          },
+          "required": [
+            "inputMuted"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "input.set_mute",
@@ -508,25 +587,29 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the input to set the mute state of",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the input to set the mute state of",
-          "required": true
+          }
         },
         {
           "name": "inputMuted",
+          "summary": "Whether to mute the input or not",
+          "required": true,
           "schema": {
             "type": "boolean"
-          },
-          "summary": "Whether to mute the input or not",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "input.toggle_mute",
@@ -534,25 +617,29 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the input to toggle the mute state of",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the input to toggle the mute state of",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "inputMuted": {
-            "type": "boolean",
-            "description": "Whether the input has been muted or unmuted"
-          }
-        },
-        "required": [
-          "inputMuted"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inputMuted": {
+              "type": "boolean",
+              "description": "Whether the input has been muted or unmuted"
+            }
+          },
+          "required": [
+            "inputMuted"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "input.get_volume",
@@ -560,30 +647,34 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the input to get the volume of",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the input to get the volume of",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "inputVolumeMul": {
-            "type": "number",
-            "description": "Volume setting in mul"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inputVolumeMul": {
+              "type": "number",
+              "description": "Volume setting in mul"
+            },
+            "inputVolumeDb": {
+              "type": "number",
+              "description": "Volume setting in dB"
+            }
           },
-          "inputVolumeDb": {
-            "type": "number",
-            "description": "Volume setting in dB"
-          }
-        },
-        "required": [
-          "inputVolumeMul",
-          "inputVolumeDb"
-        ]
-      }
+          "required": [
+            "inputVolumeMul",
+            "inputVolumeDb"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "input.set_volume",
@@ -591,114 +682,138 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the input to set the volume of",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the input to set the volume of",
-          "required": true
+          }
         },
         {
           "name": "inputVolumeDb",
+          "summary": "Volume setting in dB",
           "schema": {
             "type": "number"
-          },
-          "summary": "Volume setting in dB"
+          }
         },
         {
           "name": "inputVolumeMul",
+          "summary": "Volume setting in mul",
           "schema": {
             "type": "number"
-          },
-          "summary": "Volume setting in mul"
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "stream.get_status",
       "summary": "Get stream output status",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "Whether the output is active"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "Whether the output is active"
+            },
+            "outputReconnecting": {
+              "type": "boolean",
+              "description": "Whether the output is currently reconnecting"
+            },
+            "outputTimecode": {
+              "type": "string",
+              "description": "Current formatted timecode string for the output"
+            },
+            "outputDuration": {
+              "type": "number",
+              "description": "Current duration in milliseconds for the output"
+            },
+            "outputCongestion": {
+              "type": "number",
+              "description": "Congestion of the output"
+            },
+            "outputBytes": {
+              "type": "number",
+              "description": "Number of bytes sent by the output"
+            },
+            "outputSkippedFrames": {
+              "type": "number",
+              "description": "Number of frames skipped by the output's process"
+            },
+            "outputTotalFrames": {
+              "type": "number",
+              "description": "Total number of frames delivered by the output's process"
+            }
           },
-          "outputReconnecting": {
-            "type": "boolean",
-            "description": "Whether the output is currently reconnecting"
-          },
-          "outputTimecode": {
-            "type": "string",
-            "description": "Current formatted timecode string for the output"
-          },
-          "outputDuration": {
-            "type": "number",
-            "description": "Current duration in milliseconds for the output"
-          },
-          "outputCongestion": {
-            "type": "number",
-            "description": "Congestion of the output"
-          },
-          "outputBytes": {
-            "type": "number",
-            "description": "Number of bytes sent by the output"
-          },
-          "outputSkippedFrames": {
-            "type": "number",
-            "description": "Number of frames skipped by the output's process"
-          },
-          "outputTotalFrames": {
-            "type": "number",
-            "description": "Total number of frames delivered by the output's process"
-          }
-        },
-        "required": [
-          "outputActive",
-          "outputReconnecting",
-          "outputTimecode",
-          "outputDuration",
-          "outputCongestion",
-          "outputBytes",
-          "outputSkippedFrames",
-          "outputTotalFrames"
-        ]
-      }
+          "required": [
+            "outputActive",
+            "outputReconnecting",
+            "outputTimecode",
+            "outputDuration",
+            "outputCongestion",
+            "outputBytes",
+            "outputSkippedFrames",
+            "outputTotalFrames"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "stream.start",
       "summary": "Start streaming",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "stream.stop",
       "summary": "Stop streaming",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "stream.toggle",
       "summary": "Toggle streaming",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "New state of the stream output"
-          }
-        },
-        "required": [
-          "outputActive"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "New state of the stream output"
+            }
+          },
+          "required": [
+            "outputActive"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "stream.send_caption",
@@ -706,173 +821,237 @@
       "params": [
         {
           "name": "captionText",
+          "summary": "Caption text",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Caption text",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "record.get_status",
       "summary": "Get record output status",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "Whether the output is active"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "Whether the output is active"
+            },
+            "outputPaused": {
+              "type": "boolean",
+              "description": "Whether the output is paused"
+            },
+            "outputTimecode": {
+              "type": "string",
+              "description": "Current formatted timecode string for the output"
+            },
+            "outputDuration": {
+              "type": "number",
+              "description": "Current duration in milliseconds for the output"
+            },
+            "outputBytes": {
+              "type": "number",
+              "description": "Number of bytes sent by the output"
+            }
           },
-          "outputPaused": {
-            "type": "boolean",
-            "description": "Whether the output is paused"
-          },
-          "outputTimecode": {
-            "type": "string",
-            "description": "Current formatted timecode string for the output"
-          },
-          "outputDuration": {
-            "type": "number",
-            "description": "Current duration in milliseconds for the output"
-          },
-          "outputBytes": {
-            "type": "number",
-            "description": "Number of bytes sent by the output"
-          }
-        },
-        "required": [
-          "outputActive",
-          "outputPaused",
-          "outputTimecode",
-          "outputDuration",
-          "outputBytes"
-        ]
-      }
+          "required": [
+            "outputActive",
+            "outputPaused",
+            "outputTimecode",
+            "outputDuration",
+            "outputBytes"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "record.start",
       "summary": "Start recording",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "record.stop",
       "summary": "Stop recording",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputPath": {
-            "type": "string",
-            "description": "File name for the saved recording"
-          }
-        },
-        "required": [
-          "outputPath"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputPath": {
+              "type": "string",
+              "description": "File name for the saved recording"
+            }
+          },
+          "required": [
+            "outputPath"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "record.toggle",
       "summary": "Toggle recording",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "The new active state of the output"
-          }
-        },
-        "required": [
-          "outputActive"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "The new active state of the output"
+            }
+          },
+          "required": [
+            "outputActive"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "record.pause",
       "summary": "Pause recording",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "record.resume",
       "summary": "Resume recording",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "record.toggle_pause",
       "summary": "Toggle record pause",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "replay_buffer.get_status",
       "summary": "Get replay buffer status",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "Whether the output is active"
-          }
-        },
-        "required": [
-          "outputActive"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "Whether the output is active"
+            }
+          },
+          "required": [
+            "outputActive"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "replay_buffer.start",
       "summary": "Start the replay buffer",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "replay_buffer.stop",
       "summary": "Stop the replay buffer",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "replay_buffer.toggle",
       "summary": "Toggle the replay buffer",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "Whether the output is active"
-          }
-        },
-        "required": [
-          "outputActive"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "Whether the output is active"
+            }
+          },
+          "required": [
+            "outputActive"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "replay_buffer.save",
       "summary": "Save the replay buffer to disk",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.get_status",
@@ -880,35 +1059,39 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "mediaState": {
-            "type": "string",
-            "description": "State of the media input"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "mediaState": {
+              "type": "string",
+              "description": "State of the media input"
+            },
+            "mediaDuration": {
+              "type": "number",
+              "description": "Total duration of the playing media in milliseconds. `null` if not playing"
+            },
+            "mediaCursor": {
+              "type": "number",
+              "description": "Position of the cursor in milliseconds. `null` if not playing"
+            }
           },
-          "mediaDuration": {
-            "type": "number",
-            "description": "Total duration of the playing media in milliseconds. `null` if not playing"
-          },
-          "mediaCursor": {
-            "type": "number",
-            "description": "Position of the cursor in milliseconds. `null` if not playing"
-          }
-        },
-        "required": [
-          "mediaState",
-          "mediaDuration",
-          "mediaCursor"
-        ]
-      }
+          "required": [
+            "mediaState",
+            "mediaDuration",
+            "mediaCursor"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.play",
@@ -916,17 +1099,21 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.pause",
@@ -934,17 +1121,21 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.restart",
@@ -952,17 +1143,21 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.stop",
@@ -970,17 +1165,21 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.next",
@@ -988,17 +1187,21 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.previous",
@@ -1006,17 +1209,21 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "media.set_time",
@@ -1024,105 +1231,119 @@
       "params": [
         {
           "name": "inputName",
+          "summary": "Name of the media input",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the media input",
-          "required": true
+          }
         },
         {
           "name": "mediaCursor",
+          "summary": "New cursor position to set",
+          "required": true,
           "schema": {
             "type": "number"
-          },
-          "summary": "New cursor position to set",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "transition.list",
       "summary": "List scene transitions",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "currentSceneTransitionName": {
-            "type": "string",
-            "description": "Name of the current scene transition. Can be null"
-          },
-          "currentSceneTransitionUuid": {
-            "type": "string",
-            "description": "UUID of the current scene transition. Can be null"
-          },
-          "currentSceneTransitionKind": {
-            "type": "string",
-            "description": "Kind of the current scene transition. Can be null"
-          },
-          "transitions": {
-            "type": "array",
-            "items": {
-              "type": "object"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "currentSceneTransitionName": {
+              "type": "string",
+              "description": "Name of the current scene transition. Can be null"
             },
-            "description": "Array of transitions"
-          }
-        },
-        "required": [
-          "currentSceneTransitionName",
-          "currentSceneTransitionUuid",
-          "currentSceneTransitionKind",
-          "transitions"
-        ]
-      }
+            "currentSceneTransitionUuid": {
+              "type": "string",
+              "description": "UUID of the current scene transition. Can be null"
+            },
+            "currentSceneTransitionKind": {
+              "type": "string",
+              "description": "Kind of the current scene transition. Can be null"
+            },
+            "transitions": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Array of transitions"
+            }
+          },
+          "required": [
+            "currentSceneTransitionName",
+            "currentSceneTransitionUuid",
+            "currentSceneTransitionKind",
+            "transitions"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "transition.get_current",
       "summary": "Get the current scene transition",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "transitionName": {
-            "type": "string",
-            "description": "Name of the transition"
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "transitionName": {
+              "type": "string",
+              "description": "Name of the transition"
+            },
+            "transitionUuid": {
+              "type": "string",
+              "description": "UUID of the transition"
+            },
+            "transitionKind": {
+              "type": "string",
+              "description": "Kind of the transition"
+            },
+            "transitionFixed": {
+              "type": "boolean",
+              "description": "Whether the transition uses a fixed (unconfigurable) duration"
+            },
+            "transitionDuration": {
+              "type": "number",
+              "description": "Configured transition duration in milliseconds. `null` if transition is fixed"
+            },
+            "transitionConfigurable": {
+              "type": "boolean",
+              "description": "Whether the transition supports being configured"
+            },
+            "transitionSettings": {
+              "type": "object",
+              "description": "Object of settings for the transition. `null` if transition is not configurable"
+            }
           },
-          "transitionUuid": {
-            "type": "string",
-            "description": "UUID of the transition"
-          },
-          "transitionKind": {
-            "type": "string",
-            "description": "Kind of the transition"
-          },
-          "transitionFixed": {
-            "type": "boolean",
-            "description": "Whether the transition uses a fixed (unconfigurable) duration"
-          },
-          "transitionDuration": {
-            "type": "number",
-            "description": "Configured transition duration in milliseconds. `null` if transition is fixed"
-          },
-          "transitionConfigurable": {
-            "type": "boolean",
-            "description": "Whether the transition supports being configured"
-          },
-          "transitionSettings": {
-            "type": "object",
-            "description": "Object of settings for the transition. `null` if transition is not configurable"
-          }
-        },
-        "required": [
-          "transitionName",
-          "transitionUuid",
-          "transitionKind",
-          "transitionFixed",
-          "transitionDuration",
-          "transitionConfigurable",
-          "transitionSettings"
-        ]
-      }
+          "required": [
+            "transitionName",
+            "transitionUuid",
+            "transitionKind",
+            "transitionFixed",
+            "transitionDuration",
+            "transitionConfigurable",
+            "transitionSettings"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "transition.set_current",
@@ -1130,17 +1351,21 @@
       "params": [
         {
           "name": "transitionName",
+          "summary": "Name of the transition to make active",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the transition to make active",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "transition.set_duration",
@@ -1148,25 +1373,34 @@
       "params": [
         {
           "name": "transitionDuration",
+          "summary": "Duration in milliseconds",
+          "required": true,
           "schema": {
             "type": "number"
-          },
-          "summary": "Duration in milliseconds",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "transition.trigger",
       "summary": "Trigger the current studio mode transition",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "filter.list",
@@ -1174,28 +1408,32 @@
       "params": [
         {
           "name": "sourceName",
+          "summary": "Name of the source",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the source",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "filters": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            },
-            "description": "Array of filters"
-          }
-        },
-        "required": [
-          "filters"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "filters": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "description": "Array of filters"
+            }
+          },
+          "required": [
+            "filters"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "filter.set_enabled",
@@ -1203,81 +1441,105 @@
       "params": [
         {
           "name": "sourceName",
+          "summary": "Name of the source the filter is on",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the source the filter is on",
-          "required": true
+          }
         },
         {
           "name": "filterName",
+          "summary": "Name of the filter",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the filter",
-          "required": true
+          }
         },
         {
           "name": "filterEnabled",
+          "summary": "New enable state of the filter",
+          "required": true,
           "schema": {
             "type": "boolean"
-          },
-          "summary": "New enable state of the filter",
-          "required": true
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "virtual_cam.get_status",
       "summary": "Get virtual camera status",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "Whether the output is active"
-          }
-        },
-        "required": [
-          "outputActive"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "Whether the output is active"
+            }
+          },
+          "required": [
+            "outputActive"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "virtual_cam.start",
       "summary": "Start the virtual camera",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "virtual_cam.stop",
       "summary": "Stop the virtual camera",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {}
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "virtual_cam.toggle",
       "summary": "Toggle the virtual camera",
+      "params": [],
       "result": {
-        "type": "object",
-        "properties": {
-          "outputActive": {
-            "type": "boolean",
-            "description": "Whether the output is active"
-          }
-        },
-        "required": [
-          "outputActive"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "outputActive": {
+              "type": "boolean",
+              "description": "Whether the output is active"
+            }
+          },
+          "required": [
+            "outputActive"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "screenshot.get",
@@ -1285,46 +1547,50 @@
       "params": [
         {
           "name": "sourceName",
+          "summary": "Name of the source to take a screenshot of",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "Name of the source to take a screenshot of",
-          "required": true
+          }
         },
         {
           "name": "imageFormat",
+          "summary": "Image compression format to use. Use `GetVersion` to get compatible image formats",
           "schema": {
             "type": "string"
-          },
-          "summary": "Image compression format to use. Use `GetVersion` to get compatible image formats"
+          }
         },
         {
           "name": "imageWidth",
+          "summary": "Width to scale the screenshot to",
           "schema": {
             "type": "number"
-          },
-          "summary": "Width to scale the screenshot to"
+          }
         },
         {
           "name": "imageHeight",
+          "summary": "Height to scale the screenshot to",
           "schema": {
             "type": "number"
-          },
-          "summary": "Height to scale the screenshot to"
+          }
         }
       ],
       "result": {
-        "type": "object",
-        "properties": {
-          "imageData": {
-            "type": "string",
-            "description": "Base64-encoded screenshot"
-          }
-        },
-        "required": [
-          "imageData"
-        ]
-      }
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "imageData": {
+              "type": "string",
+              "description": "Base64-encoded screenshot"
+            }
+          },
+          "required": [
+            "imageData"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
     },
     {
       "name": "obs.call",
@@ -1332,26 +1598,30 @@
       "params": [
         {
           "name": "requestType",
+          "summary": "obs-websocket request type",
+          "required": true,
           "schema": {
             "type": "string"
-          },
-          "summary": "obs-websocket request type",
-          "required": true
+          }
         },
         {
           "name": "requestData",
+          "summary": "obs-websocket request data",
           "schema": {
             "type": "object"
-          },
-          "summary": "obs-websocket request data"
+          }
         }
       ],
       "result": {
-        "type": "object"
-      }
+        "name": "result",
+        "schema": {
+          "type": "object"
+        }
+      },
+      "paramStructure": "by-name"
     }
   ],
-  "events": [
+  "x-events": [
     {
       "name": "scene.current_changed",
       "summary": "Program scene changed",
