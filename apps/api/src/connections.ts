@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
-import { WsClient } from "./ws";
+import { WsClient } from "@rawtoh/module-sdk";
 import { registerMethods } from "./rpc";
-import { signChallenge, type RawtohIdentity } from "./rawtoh-auth";
+import { signChallenge, type RawtohIdentity } from "@rawtoh/module-sdk";
 import { agentEvents, setDesiredEvents } from "./agents";
 import { listAllAccounts, type Account } from "./db";
 

@@ -13,6 +13,7 @@
   "dependencies": {
     "@hono/session": "^0.2.0",
     "@module-obs/shared": "workspace:*",
+    "@rawtoh/module-sdk": "^0.2.0",
     "drizzle-orm": "^0.45.1",
     "hono": "^4.12.8",
     "json-rpc-2.0": "^1.7.1",

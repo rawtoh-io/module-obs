@@ -1,7 +1,7 @@
 import { JSONRPCErrorException } from "json-rpc-2.0";
 import { OBS_EVENTS } from "@module-obs/shared/obs";
 import { callObs, setDesiredEvents } from "./agents";
-import type { WsClient } from "./ws";
+import type { WsClient } from "@rawtoh/module-sdk";
 
 // ---------------------------------------------------------------------------
 // JSON-RPC methods registered on the hub connection, per account.

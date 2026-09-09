@@ -38,7 +38,7 @@ fail fast with a descriptive JSON-RPC error otherwise.
 | Server state | TanStack React Query |
 | OBS protocol | obs-websocket-js **in the browser** |
 | External real-time | WebSocket JSON-RPC 2.0 (hub), WebSocket (agent), SSE (status) |
-| Auth | Cookie SSO by default (hub session cookie forwarded to `GET /api/me`, no OAuth client); OIDC (openid-client) when `RAWTOH_CLIENT_ID` is set. Hono sessions (server-side storage in `session` table) carry OIDC tokens / OAuth state |
+| Auth | `@rawtoh/module-sdk` (`/hono`): cookie SSO by default (hub session cookie forwarded to `GET /api/me`, no OAuth client); OIDC (openid-client) when `RAWTOH_CLIENT_ID` is set. Hono sessions (server-side storage in `session` table) carry OIDC tokens / OAuth state |
 | Self-service install | User hub credentials (forwarded cookie, or OIDC token with scope `module:install`) → one Rawtoh instance per OBS account (`POST /api/orgs/:orgId/accounts/:accountId/install`) |
 | Module ↔ hub auth | Ed25519 key pair per OBS account, generated locally at enrollment; `session.challenge` nonce signed and returned in `session.register` |
 | Monorepo | Turbo + Bun workspaces |
@@ -53,20 +53,17 @@ module-obs/
 │   ├── api/                     # Hono backend (Bun runtime)
 │   │   └── src/
 │   │       ├── index.ts         # Hono app, middleware, route mounting, Bun WS export
-│   │       ├── auth.ts          # Cookie SSO (/api/me, sign-out relay) + OIDC utilities (PKCE, RFC 8707)
-│   │       ├── rawtoh-auth.ts   # Enrollment (one-shot token → key pair) + challenge signing
 │   │       ├── session-storage.ts # @hono/session PostgreSQL storage (cookie carries sid only)
 │   │       ├── agents.ts        # Agent sessions (1 WS/tab) + account attachments, call routing, OBS state
 │   │       ├── connections.ts   # Hub WS connections per account (+ close codes, disconnect reasons)
 │   │       ├── rpc.ts           # Hub JSON-RPC methods → obs-websocket proxy (table-driven)
-│   │       ├── ws.ts            # WsClient (hub JSON-RPC 2.0, ping)
 │   │       ├── db/
 │   │       │   ├── schema.ts    # account, session
 │   │       │   └── index.ts     # CRUD query functions
 │   │       ├── middleware/
-│   │       │   └── auth.ts      # requireAuth, resolveOrg
+│   │       │   └── auth.ts      # SessionData/AuthEnv + requireAuth/resolveOrg bound from @rawtoh/module-sdk
 │   │       └── routes/
-│   │           ├── auth.ts      # Login, callback, logout, /api/auth/me
+│   │           ├── auth.ts      # authRoutes() from the SDK (login, callback, me, logout)
 │   │           ├── accounts.ts  # OBS account CRUD, install, enrollment, SSE status
 │   │           └── agent.ts     # Agent WebSocket endpoint /api/orgs/:orgId/agent (+ Bun websocket export)
 │   └── web/                     # React 19 + Vite frontend
