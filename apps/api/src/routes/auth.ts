@@ -1,17 +1,25 @@
 import { Hono } from "hono";
 import {
+  authMode,
   getOIDCConfig,
   buildAuthorizeUrl,
   exchangeCode,
   fetchUserInfo,
+  fetchUserByCookie,
+  getRawtohAppUrl,
+  signOutHub,
 } from "../auth";
 import type { AuthEnv } from "../middleware/auth";
 
-const APP_URL = process.env.APP_URL || "/";
+const APP_URL = process.env.APP_URL || "http://localhost:10701";
 
 const auth = new Hono<AuthEnv>();
 
 auth.get("/api/auth/login", async (c) => {
+  if (authMode === "cookie") {
+    return c.json({ url: `${getRawtohAppUrl()}/signin?redirect=${encodeURIComponent(APP_URL)}` });
+  }
+
   const session = c.get("session");
   const config = await getOIDCConfig();
   const { url, auth: authRequest } = await buildAuthorizeUrl(config);
@@ -64,6 +72,12 @@ auth.get("/callback", async (c) => {
 });
 
 auth.get("/api/auth/me", async (c) => {
+  if (authMode === "cookie") {
+    const cookie = c.req.header("cookie");
+    const user = cookie ? await fetchUserByCookie(cookie).catch(() => null) : null;
+    return c.json({ user });
+  }
+
   const session = c.get("session");
   const data = await session.get();
   if (!data?.user) {
@@ -73,8 +87,9 @@ auth.get("/api/auth/me", async (c) => {
 });
 
 auth.post("/api/auth/logout", async (c) => {
-  const session = c.get("session");
-  session.delete();
+  const cookie = c.req.header("cookie");
+  if (authMode === "cookie" && cookie) await signOutHub(cookie);
+  c.get("session").delete();
   return c.json({ ok: true });
 });
 

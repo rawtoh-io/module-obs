@@ -38,8 +38,8 @@ fail fast with a descriptive JSON-RPC error otherwise.
 | Server state | TanStack React Query |
 | OBS protocol | obs-websocket-js **in the browser** |
 | External real-time | WebSocket JSON-RPC 2.0 (hub), WebSocket (agent), SSE (status) |
-| Auth | OIDC (openid-client) + Hono sessions (server-side storage in `session` table) |
-| Self-service install | User OIDC token (scope `module:install`) → one Rawtoh instance per OBS account (`POST /api/orgs/:orgId/accounts/:accountId/install`) |
+| Auth | Cookie SSO by default (hub session cookie forwarded to `GET /api/me`, no OAuth client); OIDC (openid-client) when `RAWTOH_CLIENT_ID` is set. Hono sessions (server-side storage in `session` table) carry OIDC tokens / OAuth state |
+| Self-service install | User hub credentials (forwarded cookie, or OIDC token with scope `module:install`) → one Rawtoh instance per OBS account (`POST /api/orgs/:orgId/accounts/:accountId/install`) |
 | Module ↔ hub auth | Ed25519 key pair per OBS account, generated locally at enrollment; `session.challenge` nonce signed and returned in `session.register` |
 | Monorepo | Turbo + Bun workspaces |
 | Linter / Formatter | Biome |
@@ -53,7 +53,7 @@ module-obs/
 │   ├── api/                     # Hono backend (Bun runtime)
 │   │   └── src/
 │   │       ├── index.ts         # Hono app, middleware, route mounting, Bun WS export
-│   │       ├── auth.ts          # OIDC utilities (discovery, PKCE, tokens, RFC 8707 resource)
+│   │       ├── auth.ts          # Cookie SSO (/api/me, sign-out relay) + OIDC utilities (PKCE, RFC 8707)
 │   │       ├── rawtoh-auth.ts   # Enrollment (one-shot token → key pair) + challenge signing
 │   │       ├── session-storage.ts # @hono/session PostgreSQL storage (cookie carries sid only)
 │   │       ├── agents.ts        # Agent sessions (1 WS/tab) + account attachments, call routing, OBS state
@@ -149,14 +149,15 @@ bun run db:migrate   # Run migrations
 
 ```bash
 docker compose -f docker-compose.dev.yml up -d   # PostgreSQL on :10702
-cp .env.example .env                             # fill RAWTOH_CLIENT_ID/SECRET
+cp .env.example .env                             # cookie SSO by default
 bun run db:migrate
 bun run dev
 ```
 
-Requires a Rawtoh OAuth client (redirect URI `<APP_URL>/callback`, scopes
-`openid profile email module:install`) and a module definition with slug `obs`
-registered in Rawtoh (import `manifest.json`).
+Requires a module definition with slug `obs` registered in Rawtoh (import
+`manifest.json`). Users sign in through the hub's session cookie; an OAuth
+client (redirect URI `<APP_URL>/callback`, scopes `openid profile email
+module:install`) is only needed when self-hosting off the hub domain.
 
 Env vars: see `.env.example`. Dev ports: API 10700, Web 10701, Postgres 10702.
 
@@ -184,7 +185,7 @@ docker compose -f docker-compose.yml -f docker-compose.caddy.yml up -d
 docker compose -f docker-compose.yml -f docker-compose.proxy.yml up -d
 ```
 
-Required `.env` (compose production): `PUBLIC_DOMAIN`, `POSTGRES_PASSWORD`, `SESSION_SECRET`, `RAWTOH_CLIENT_ID`, `RAWTOH_CLIENT_SECRET`, `RAWTOH_ISSUER`, `RAWTOH_WS_URL` (+ `ACME_EMAIL` standalone, `PROXY_NETWORK` external-proxy).
+Required `.env` (compose production): `PUBLIC_DOMAIN`, `POSTGRES_PASSWORD`, `SESSION_SECRET`, `RAWTOH_ISSUER` (+ `RAWTOH_CLIENT_ID`/`RAWTOH_CLIENT_SECRET` for OIDC off the hub domain), `RAWTOH_WS_URL` (+ `ACME_EMAIL` standalone, `PROXY_NETWORK` external-proxy).
 
 CSP note: the obs-web nginx CSP allows `connect-src 'self' ws: wss:` — the
 browser agent must reach obs-websocket on the user's machine (localhost/LAN).

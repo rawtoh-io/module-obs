@@ -10,7 +10,7 @@ See [AGENTS.md](./AGENTS.md) for the full architecture, patterns and commands.
 
 ```bash
 docker compose -f docker-compose.dev.yml up -d
-cp .env.example .env   # fill RAWTOH_CLIENT_ID / RAWTOH_CLIENT_SECRET
+cp .env.example .env   # cookie SSO by default — no OAuth client needed
 bun install
 bun run db:migrate
 bun run dev            # API :10700, Web :10701

@@ -41,10 +41,6 @@ stringData:
   # rotating the session secret only logs users out, rotating this one makes
   # every stored identity undecryptable and forces a re-enrollment per account.
   ENCRYPTION_KEY: 7pQ4mB9xK2vL6nR3sT8wY1cF5hJ0dG7zA4eU2iO9kM=  # openssl rand -base64 32
-  # From the module instance registered on the Rawtoh platform
-  # (shown once at creation):
-  RAWTOH_CLIENT_ID: rth_c_8d4f1a6b3e9c...
-  RAWTOH_CLIENT_SECRET: rth_s_5n2x8v4k7m1p...
 ```
 
 ### 5. Non-secret config
