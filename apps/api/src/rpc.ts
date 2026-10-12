@@ -58,6 +58,26 @@ function reqBool(p: Params, name: string): boolean {
   return v;
 }
 
+function optBool(p: Params, name: string): boolean | undefined {
+  const v = p[name];
+  return typeof v === "boolean" ? v : undefined;
+}
+
+function optObj(p: Params, name: string): Record<string, unknown> | undefined {
+  const v = p[name];
+  return v && typeof v === "object" && !Array.isArray(v) ? (v as Record<string, unknown>) : undefined;
+}
+
+function reqObj(p: Params, name: string): Record<string, unknown> {
+  const v = optObj(p, name);
+  if (v === undefined) throw missing(name);
+  return v;
+}
+
+function defined(o: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(o).filter(([, v]) => v !== undefined));
+}
+
 type ObsMethodDef = (p: Params) => { requestType: string; requestData?: Record<string, unknown> };
 
 // rpc method name → obs-websocket request mapping
@@ -118,6 +138,36 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
       sceneItemEnabled: reqBool(p, "sceneItemEnabled"),
     },
   }),
+  "scene_item.get_transform": (p) => ({
+    requestType: "GetSceneItemTransform",
+    requestData: {
+      sceneName: reqStr(p, "sceneName"),
+      sceneItemId: reqNum(p, "sceneItemId"),
+    },
+  }),
+  "scene_item.set_transform": (p) => ({
+    requestType: "SetSceneItemTransform",
+    requestData: {
+      sceneName: reqStr(p, "sceneName"),
+      sceneItemId: reqNum(p, "sceneItemId"),
+      sceneItemTransform: reqObj(p, "sceneItemTransform"),
+    },
+  }),
+  "scene_item.get_index": (p) => ({
+    requestType: "GetSceneItemIndex",
+    requestData: {
+      sceneName: reqStr(p, "sceneName"),
+      sceneItemId: reqNum(p, "sceneItemId"),
+    },
+  }),
+  "scene_item.set_index": (p) => ({
+    requestType: "SetSceneItemIndex",
+    requestData: {
+      sceneName: reqStr(p, "sceneName"),
+      sceneItemId: reqNum(p, "sceneItemId"),
+      sceneItemIndex: reqNum(p, "sceneItemIndex"),
+    },
+  }),
 
   // Inputs
   "input.list": (p) => ({
@@ -158,6 +208,43 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
       },
     };
   },
+  "input.create": (p) => ({
+    requestType: "CreateInput",
+    requestData: defined({
+      sceneName: reqStr(p, "sceneName"),
+      inputName: reqStr(p, "inputName"),
+      inputKind: reqStr(p, "inputKind"),
+      inputSettings: optObj(p, "inputSettings"),
+      sceneItemEnabled: optBool(p, "sceneItemEnabled"),
+    }),
+  }),
+  "input.remove": (p) => ({
+    requestType: "RemoveInput",
+    requestData: { inputName: reqStr(p, "inputName") },
+  }),
+  "input.get_settings": (p) => ({
+    requestType: "GetInputSettings",
+    requestData: { inputName: reqStr(p, "inputName") },
+  }),
+  "input.set_settings": (p) => ({
+    requestType: "SetInputSettings",
+    requestData: defined({
+      inputName: reqStr(p, "inputName"),
+      inputSettings: reqObj(p, "inputSettings"),
+      overlay: optBool(p, "overlay"),
+    }),
+  }),
+  "input.get_monitor_type": (p) => ({
+    requestType: "GetInputAudioMonitorType",
+    requestData: { inputName: reqStr(p, "inputName") },
+  }),
+  "input.set_monitor_type": (p) => ({
+    requestType: "SetInputAudioMonitorType",
+    requestData: {
+      inputName: reqStr(p, "inputName"),
+      monitorType: reqStr(p, "monitorType"),
+    },
+  }),
 
   // Stream
   "stream.get_status": () => ({ requestType: "GetStreamStatus" }),
@@ -228,6 +315,22 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
       sourceName: reqStr(p, "sourceName"),
       filterName: reqStr(p, "filterName"),
       filterEnabled: reqBool(p, "filterEnabled"),
+    },
+  }),
+  "filter.create": (p) => ({
+    requestType: "CreateSourceFilter",
+    requestData: defined({
+      sourceName: reqStr(p, "sourceName"),
+      filterName: reqStr(p, "filterName"),
+      filterKind: reqStr(p, "filterKind"),
+      filterSettings: optObj(p, "filterSettings"),
+    }),
+  }),
+  "filter.remove": (p) => ({
+    requestType: "RemoveSourceFilter",
+    requestData: {
+      sourceName: reqStr(p, "sourceName"),
+      filterName: reqStr(p, "filterName"),
     },
   }),
 

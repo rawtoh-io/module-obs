@@ -520,6 +520,158 @@
       "paramStructure": "by-name"
     },
     {
+      "name": "scene_item.get_transform",
+      "summary": "Get the transform/crop info of a scene item",
+      "params": [
+        {
+          "name": "sceneName",
+          "summary": "Name of the scene the item is in",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "sceneItemId",
+          "summary": "Numeric ID of the scene item",
+          "required": true,
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sceneItemTransform": {
+              "type": "object",
+              "description": "Object containing scene item transform info (positionX, positionY, scaleX, scaleY, rotation, width, height, alignment, bounds*, crop*)"
+            }
+          },
+          "required": [
+            "sceneItemTransform"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "scene_item.set_transform",
+      "summary": "Set the transform/crop info of a scene item",
+      "params": [
+        {
+          "name": "sceneName",
+          "summary": "Name of the scene the item is in",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "sceneItemId",
+          "summary": "Numeric ID of the scene item",
+          "required": true,
+          "schema": {
+            "type": "number"
+          }
+        },
+        {
+          "name": "sceneItemTransform",
+          "summary": "Object containing scene item transform info to update (positionX, positionY, scaleX, scaleY, rotation, alignment, bounds*, crop*)",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "scene_item.get_index",
+      "summary": "Get the index position of a scene item in a scene (0 is the bottom)",
+      "params": [
+        {
+          "name": "sceneName",
+          "summary": "Name of the scene the item is in",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "sceneItemId",
+          "summary": "Numeric ID of the scene item",
+          "required": true,
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sceneItemIndex": {
+              "type": "number",
+              "description": "Index position of the scene item"
+            }
+          },
+          "required": [
+            "sceneItemIndex"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "scene_item.set_index",
+      "summary": "Set the index position of a scene item in a scene (0 is the bottom)",
+      "params": [
+        {
+          "name": "sceneName",
+          "summary": "Name of the scene the item is in",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "sceneItemId",
+          "summary": "Numeric ID of the scene item",
+          "required": true,
+          "schema": {
+            "type": "number"
+          }
+        },
+        {
+          "name": "sceneItemIndex",
+          "summary": "New index position of the scene item (>= 0)",
+          "required": true,
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
       "name": "input.list",
       "summary": "List inputs (optionally filtered by kind)",
       "params": [
@@ -700,6 +852,225 @@
           "summary": "Volume setting in mul",
           "schema": {
             "type": "number"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "input.create",
+      "summary": "Create a new input, adding it as a scene item on the specified scene",
+      "params": [
+        {
+          "name": "sceneName",
+          "summary": "Name of the scene to add the input to as a scene item",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "inputName",
+          "summary": "Name of the new input to create",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "inputKind",
+          "summary": "The kind of input to be created (e.g. text_gdiplus_v2, ffmpeg_source)",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "inputSettings",
+          "summary": "Settings object to initialize the input with",
+          "schema": {
+            "type": "object"
+          }
+        },
+        {
+          "name": "sceneItemEnabled",
+          "summary": "Whether to set the created scene item to enabled or disabled (default: true)",
+          "schema": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inputUuid": {
+              "type": "string",
+              "description": "UUID of the newly created input"
+            },
+            "sceneItemId": {
+              "type": "number",
+              "description": "ID of the newly created scene item"
+            }
+          },
+          "required": [
+            "inputUuid",
+            "sceneItemId"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "input.remove",
+      "summary": "Remove an existing input (also removes all its scene items)",
+      "params": [
+        {
+          "name": "inputName",
+          "summary": "Name of the input to remove",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "input.get_settings",
+      "summary": "Get the settings of an input",
+      "params": [
+        {
+          "name": "inputName",
+          "summary": "Name of the input to get the settings of",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "inputSettings": {
+              "type": "object",
+              "description": "Object of settings for the input"
+            },
+            "inputKind": {
+              "type": "string",
+              "description": "The kind of the input"
+            }
+          },
+          "required": [
+            "inputSettings",
+            "inputKind"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "input.set_settings",
+      "summary": "Set the settings of an input",
+      "params": [
+        {
+          "name": "inputName",
+          "summary": "Name of the input to set the settings of",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "inputSettings",
+          "summary": "Object of settings to apply",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        },
+        {
+          "name": "overlay",
+          "summary": "True to apply on top of existing settings, false to reset to defaults first (default: true)",
+          "schema": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "input.get_monitor_type",
+      "summary": "Get the audio monitor type of an input",
+      "params": [
+        {
+          "name": "inputName",
+          "summary": "Name of the input to get the audio monitor type of",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "monitorType": {
+              "type": "string",
+              "description": "Audio monitor type (OBS_MONITORING_TYPE_NONE, OBS_MONITORING_TYPE_MONITOR_ONLY, OBS_MONITORING_TYPE_MONITOR_AND_OUTPUT)"
+            }
+          },
+          "required": [
+            "monitorType"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "input.set_monitor_type",
+      "summary": "Set the audio monitor type of an input",
+      "params": [
+        {
+          "name": "inputName",
+          "summary": "Name of the input to set the audio monitor type of",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "monitorType",
+          "summary": "Audio monitor type (OBS_MONITORING_TYPE_NONE, OBS_MONITORING_TYPE_MONITOR_ONLY, OBS_MONITORING_TYPE_MONITOR_AND_OUTPUT)",
+          "required": true,
+          "schema": {
+            "type": "string"
           }
         }
       ],
@@ -1461,6 +1832,81 @@
           "required": true,
           "schema": {
             "type": "boolean"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "filter.create",
+      "summary": "Create a new filter on a source",
+      "params": [
+        {
+          "name": "sourceName",
+          "summary": "Name of the source to add the filter to",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "filterName",
+          "summary": "Name of the new filter to be created",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "filterKind",
+          "summary": "The kind of filter to be created (e.g. color_key_filter_v2, gain_filter)",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "filterSettings",
+          "summary": "Settings object to initialize the filter with",
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "filter.remove",
+      "summary": "Remove a filter from a source",
+      "params": [
+        {
+          "name": "sourceName",
+          "summary": "Name of the source the filter is on",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "filterName",
+          "summary": "Name of the filter to remove",
+          "required": true,
+          "schema": {
+            "type": "string"
           }
         }
       ],
