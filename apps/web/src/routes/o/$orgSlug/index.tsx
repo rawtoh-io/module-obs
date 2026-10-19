@@ -20,6 +20,8 @@ import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/ca
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { AccessDenied } from '@/components/access-denied'
 import { ArrowLeftIcon, PlusIcon, TrashIcon, KeyIcon, UnplugIcon, PlugIcon, ActivityIcon, MonitorIcon, TriangleAlertIcon, PencilIcon } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -31,8 +33,9 @@ export const Route = createFileRoute('/o/$orgSlug/')({
 
 function RouteComponent() {
   const org = useOrg()
-  const { data: accounts, isLoading } = useAccounts(org.id)
-  useConnectionStatus(org.id)
+  const canManage = org.role === 'owner'
+  const { data: accounts, isLoading, error } = useAccounts(org.id, canManage)
+  useConnectionStatus(org.id, canManage)
   const createAccount = useCreateAccount(org.id)
   const removeAccount = useRemoveAccount(org.id)
   const [addOpen, setAddOpen] = useState(false)
@@ -51,33 +54,45 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="flex justify-end mb-4">
-        <Button onClick={() => setAddOpen(true)} className="w-full sm:w-auto">
-          <PlusIcon />
-          Add OBS account
-        </Button>
-      </div>
-
-      {isLoading ? (
-        <p className="text-muted-foreground">Loading...</p>
-      ) : !accounts || accounts.length === 0 ? (
-        <p className="text-muted-foreground">No OBS accounts yet.</p>
+      {!canManage ? (
+        <AccessDenied role={org.role} orgName={org.name} resource="OBS accounts" />
       ) : (
-        <div className="flex flex-col gap-3">
-          {accounts.map((account) => (
-            <AccountCard
-              key={account.id}
-              orgId={org.id}
-              account={account}
-              onRemove={() =>
-                removeAccount.mutate(account.id, {
-                  onSuccess: () => toast.success('Account removed'),
-                  onError: (err) => toast.error(err.message),
-                })
-              }
-            />
-          ))}
-        </div>
+        <>
+          <div className="flex justify-end mb-4">
+            <Button onClick={() => setAddOpen(true)} className="w-full sm:w-auto">
+              <PlusIcon />
+              Add OBS account
+            </Button>
+          </div>
+
+          {isLoading ? (
+            <p className="text-muted-foreground">Loading...</p>
+          ) : error ? (
+            <Alert variant="destructive">
+              <TriangleAlertIcon />
+              <AlertTitle>Could not load OBS accounts</AlertTitle>
+              <AlertDescription>{error.message}</AlertDescription>
+            </Alert>
+          ) : !accounts || accounts.length === 0 ? (
+            <p className="text-muted-foreground">No OBS accounts yet.</p>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {accounts.map((account) => (
+                <AccountCard
+                  key={account.id}
+                  orgId={org.id}
+                  account={account}
+                  onRemove={() =>
+                    removeAccount.mutate(account.id, {
+                      onSuccess: () => toast.success('Account removed'),
+                      onError: (err) => toast.error(err.message),
+                    })
+                  }
+                />
+              ))}
+            </div>
+          )}
+        </>
       )}
 
       <AccountSheet

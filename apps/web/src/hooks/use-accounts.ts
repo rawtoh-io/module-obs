@@ -14,10 +14,11 @@ const DEFAULT_STATUS: AccountStatus = {
   obs: 'disconnected',
 }
 
-export function useAccounts(orgId: string) {
+export function useAccounts(orgId: string, enabled = true) {
   return useQuery({
     queryKey: ['accounts', orgId],
     queryFn: () => query.get(`api/orgs/${orgId}/accounts`).json<Account[]>(),
+    enabled,
   })
 }
 
@@ -75,11 +76,12 @@ export function useDeleteCredentials(orgId: string) {
   })
 }
 
-export function useConnectionStatus(orgId: string) {
+export function useConnectionStatus(orgId: string, enabled = true) {
   const qc = useQueryClient()
   const eventSourceRef = useRef<EventSource | null>(null)
 
   useEffect(() => {
+    if (!enabled) return
     const es = new EventSource(`/api/orgs/${orgId}/accounts/events`)
     eventSourceRef.current = es
 
@@ -104,7 +106,7 @@ export function useConnectionStatus(orgId: string) {
       es.close()
       eventSourceRef.current = null
     }
-  }, [orgId, qc])
+  }, [orgId, qc, enabled])
 }
 
 // Read-only subscription to the cache populated by useConnectionStatus SSE stream — no fetching needed
