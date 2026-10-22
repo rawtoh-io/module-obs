@@ -30,12 +30,18 @@ One-time setup, in order. Examples assume domain `rawtoh.io` — replace with yo
 
 **Where:** copy `deploy/k8s/bootstrap/secrets.example.yaml` → `deploy/k8s/bootstrap/secrets.yaml` (gitignored), fill it in, then `kubectl apply -f deploy/k8s/bootstrap/secrets.yaml`.
 
+The module uses the platform's PostgreSQL (`postgres` Service, user `rawtoh`, password `POSTGRES_PASSWORD` from `rawtoh-secrets`). Create its database once, before the first deploy:
+
+```sh
+kubectl -n rawtoh exec deploy/postgres -- createdb -U rawtoh obs
+```
+
 **Example:**
 
 ```yaml
 stringData:
-  POSTGRES_PASSWORD: Q4wE8r2T6yU1iO5p
-  DATABASE_URL: postgres://rawtoh:Q4wE8r2T6yU1iO5p@obs-postgres:5432/obs
+  # Password of the platform's rawtoh user (POSTGRES_PASSWORD in rawtoh-secrets)
+  DATABASE_URL: postgres://rawtoh:Q4wE8r2T6yU1iO5p@postgres:5432/obs
   SESSION_SECRET: m3N6b9V2c5X8z1A4s7D0f3G6h9J2k5L8   # openssl rand -base64 32
   # Encrypts the Ed25519 private keys at rest. Distinct from SESSION_SECRET:
   # rotating the session secret only logs users out, rotating this one makes

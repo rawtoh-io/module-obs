@@ -9,8 +9,6 @@ metadata:
 data:
   PUBLIC_DOMAIN: obs.$DOMAIN
   APP_URL: https://obs.$DOMAIN
-  POSTGRES_USER: rawtoh
-  POSTGRES_DB: obs
   # Rawtoh platform
   RAWTOH_ISSUER: https://app.$DOMAIN/api/auth
   RAWTOH_APP_URL: https://app.$DOMAIN
