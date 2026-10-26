@@ -36,6 +36,7 @@ export const userInfoSchema = z.object({
   email: z.string().optional(),
   picture: z.string().optional(),
   email_verified: z.boolean().optional(),
+  activeOrganizationId: z.string().optional(),
   organizations: z.array(orgSchema).optional(),
 });
 

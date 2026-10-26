@@ -15,7 +15,10 @@ function RouteComponent() {
 
   // Land straight in the admin shell; it has an org switcher. The list below
   // only remains for users without any organization.
-  const home = orgs.find((o) => o.role === 'owner') ?? orgs[0]
+  const home =
+    orgs.find((o) => o.id === user?.activeOrganizationId) ??
+    orgs.find((o) => o.role === 'owner') ??
+    orgs[0]
   if (home) return <Navigate to="/o/$orgSlug" params={{ orgSlug: home.slug }} replace />
 
   return (
