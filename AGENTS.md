@@ -75,7 +75,7 @@ module-obs/
 │   └── src/
 │       ├── validation.ts        # Zod schemas + inferred types (accounts, org, user)
 │       └── obs.ts               # OBS_EVENTS map + agent protocol message types
-└── manifest.json                # Module definition: 59 methods, 22 events
+└── manifest.json                # Module definition: 73 methods, 22 events
 ```
 
 ## Code standards

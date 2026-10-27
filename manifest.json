@@ -1845,6 +1845,104 @@
       "paramStructure": "by-name"
     },
     {
+      "name": "filter.get",
+      "summary": "Get a source filter (kind, index, enabled state and settings)",
+      "params": [
+        {
+          "name": "sourceName",
+          "summary": "Name of the source the filter is on",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "filterName",
+          "summary": "Name of the filter",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "filterEnabled": {
+              "type": "boolean",
+              "description": "Whether the filter is enabled"
+            },
+            "filterIndex": {
+              "type": "number",
+              "description": "Index of the filter in the list, beginning at 0"
+            },
+            "filterKind": {
+              "type": "string",
+              "description": "The kind of filter"
+            },
+            "filterSettings": {
+              "type": "object",
+              "description": "Settings object associated with the filter"
+            }
+          },
+          "required": [
+            "filterEnabled",
+            "filterIndex",
+            "filterKind",
+            "filterSettings"
+          ]
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
+      "name": "filter.set_settings",
+      "summary": "Set the settings of a source filter",
+      "params": [
+        {
+          "name": "sourceName",
+          "summary": "Name of the source the filter is on",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "filterName",
+          "summary": "Name of the filter",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "filterSettings",
+          "summary": "Object of settings to apply",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        },
+        {
+          "name": "overlay",
+          "summary": "True to apply on top of existing settings, false to reset to defaults first (default: true)",
+          "schema": {
+            "type": "boolean"
+          }
+        }
+      ],
+      "result": {
+        "name": "result",
+        "schema": {
+          "type": "object",
+          "properties": {}
+        }
+      },
+      "paramStructure": "by-name"
+    },
+    {
       "name": "filter.create",
       "summary": "Create a new filter on a source",
       "params": [

@@ -317,6 +317,22 @@ const OBS_METHODS: Record<string, ObsMethodDef> = {
       filterEnabled: reqBool(p, "filterEnabled"),
     },
   }),
+  "filter.get": (p) => ({
+    requestType: "GetSourceFilter",
+    requestData: {
+      sourceName: reqStr(p, "sourceName"),
+      filterName: reqStr(p, "filterName"),
+    },
+  }),
+  "filter.set_settings": (p) => ({
+    requestType: "SetSourceFilterSettings",
+    requestData: defined({
+      sourceName: reqStr(p, "sourceName"),
+      filterName: reqStr(p, "filterName"),
+      filterSettings: reqObj(p, "filterSettings"),
+      overlay: optBool(p, "overlay"),
+    }),
+  }),
   "filter.create": (p) => ({
     requestType: "CreateSourceFilter",
     requestData: defined({
